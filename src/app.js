@@ -261,10 +261,20 @@ function packsToOptions(packs, pack_list) {
         iohook.start();
       }
     });
+    
+    var playKeyupSound = false
+    ipcRenderer.on('theKeyup', function (_event, _is_keyup) {
+      is_keyup = _is_keyup;
+      if (is_keyup) {
+        playKeyupSound = true
+      } else {
+        playKeyupSound = false
+      }
+    });
 
     // if key released, clear current key
     iohook.on('keyup', () => {
-      if(is_keyup){
+      if(playKeyupSound){
         playSound(`keycode-${current_key_down}`, store.get(MV_VOL_LSID))
       }
       current_key_down = null;

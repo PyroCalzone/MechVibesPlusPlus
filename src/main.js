@@ -5,6 +5,7 @@ const fs = require('fs-extra');
 
 const StartupHandler = require('./utils/startup_handler');
 const ListenHandler = require('./utils/listen_handler');
+const KeyupHandler = require('./utils/keyup_handler');
 
 const SYSTRAY_ICON = path.join(__dirname, '/assets/system-tray-icon.png');
 const home_dir = app.getPath('home');
@@ -114,6 +115,7 @@ if (!gotTheLock) {
 
     const startup_handler = new StartupHandler(app);
     const listen_handler = new ListenHandler(app);
+    const keyup_handler = new KeyupHandler(app)
 
     // context menu when hover on tray icon
     const contextMenu = Menu.buildFromTemplate([
@@ -148,9 +150,10 @@ if (!gotTheLock) {
       {
       label: 'KeyupSounds',
       type: 'checkbox',
-      checked: listen_handler.is_keyup,
+      checked: keyup_handler.is_keyup,
       click: function () {
-        listen_handler.toggleKeyup();
+        keyup_handler.toggle();
+        win.webContents.send('theKeyup', keyup_handler.is_keyup);
       },
     },
       {
