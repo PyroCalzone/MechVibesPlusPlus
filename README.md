@@ -1,4 +1,4 @@
-# Mechvibes Revisioned
+# Mechvibes Modified
 
 Adding KeyUp and KeyDown sounds to [Mechvibes](https://mechvibes.com/)
 
