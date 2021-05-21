@@ -172,6 +172,12 @@ if (!gotTheLock) {
           app.quit();
         },
       },
+      {
+        label: 'Test',
+        click: function() {
+          console.log('testing for tray test')
+        }
+      }
     ]);
 
     // double click on tray icon, show the app
