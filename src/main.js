@@ -10,7 +10,6 @@ const KeyupHandler = require('./utils/keyup_handler');
 const SYSTRAY_ICON = path.join(__dirname, '/assets/system-tray-icon.png');
 const home_dir = app.getPath('home');
 const custom_dir = path.join(home_dir, '/mechvibes_custom');
-// const projcredits = path.join(home_dir, '/mechvibes_custom/projcred.txt');    ill work on this later (saturn)
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -149,7 +148,7 @@ if (!gotTheLock) {
         },
       },
       {
-      label: 'Key Up Sounds',
+      label: 'KeyupSounds',
       type: 'checkbox',
       checked: keyup_handler.is_keyup,
       click: function () {
@@ -166,12 +165,6 @@ if (!gotTheLock) {
         },
       },
       {
-        label: 'Project Credits',
-        click: function() {
-          
-        },
-      },
-      {
         label: 'Quit',
         click: function () {
           // quit
@@ -179,7 +172,6 @@ if (!gotTheLock) {
           app.quit();
         },
       },
-      
     ]);
 
     // double click on tray icon, show the app

@@ -275,7 +275,7 @@ function packsToOptions(packs, pack_list) {
     // if key released, clear current key
     iohook.on('keyup', () => {
       if(playKeyupSound){
-        playSound(`keycode-${current_key_down}`, store.get(MV_VOL_LSID))
+        playSound(`keycode-00${current_key_down}`, store.get(MV_VOL_LSID))
       }
       current_key_down = null;
       app_logo.classList.remove('pressed');
@@ -301,7 +301,12 @@ function packsToOptions(packs, pack_list) {
       // get loaded audio object
       // if object valid, pack volume and play sound
       if (current_pack) {
-        playSound(sound_id, store.get(MV_VOL_LSID));
+        if(playKeyupSound){
+          playSound(`keycode-0${current_key_down}`, store.get(MV_VOL_LSID))
+        }
+        else{
+          playSound(sound_id, store.get(MV_VOL_LSID));
+        }
       }
     });
   });
