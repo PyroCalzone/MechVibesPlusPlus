@@ -218,7 +218,7 @@ function packsToOptions(packs, pack_list) {
     packsToOptions(packs, pack_list);
 
     // check for new version
-    fetch('https://api.github.com/repos/hainguyents13/mechvibes/releases/latest')
+    fetch('https://api.github.com/repos/PyroCalzone/MechVibesModified/releases/latest')
       .then((res) => res.json())
       .then((json) => {
         if (json.tag_name > APP_VERSION) {
