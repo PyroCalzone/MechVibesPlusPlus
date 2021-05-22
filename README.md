@@ -1,3 +1,7 @@
+# !Note!
+
+We are not MechVibes... If an issue occurs while you are using our edited program, DO NOT GO TO THE MECHVIBES DISCORD. Submit an issue here on our github. Thank you.
+
 # Mechvibes Modified
 
 Adding KeyUp and KeyDown sounds to [Mechvibes](https://mechvibes.com/)
