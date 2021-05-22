@@ -18,7 +18,7 @@ You can download the Original Mechvibes [here](https://mechvibes.com/download/)
 
 # How to Install
 
--- add install info when we can
+Download the latest release from the github.
 
 
 
