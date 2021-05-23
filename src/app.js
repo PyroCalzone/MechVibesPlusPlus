@@ -111,7 +111,7 @@ function checkIfAllSoundLoaded(status_display_elem, app_body) {
       return false;
     }
   });
-  status_display_elem.innerHTML = 'Mechvibes';
+  status_display_elem.innerHTML = 'Mechvibes++';
   app_body.classList.remove('loading');
   return true;
 }
@@ -218,7 +218,7 @@ function packsToOptions(packs, pack_list) {
     packsToOptions(packs, pack_list);
 
     // check for new version
-    fetch('https://api.github.com/repos/PyroCalzone/MechVibesModified/releases/latest')
+    fetch('https://api.github.com/repos/PyroCalzone/MechVibesPlusPlus/releases/latest')
       .then((res) => res.json())
       .then((json) => {
         if (json.tag_name > APP_VERSION) {

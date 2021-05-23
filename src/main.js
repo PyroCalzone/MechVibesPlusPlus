@@ -111,16 +111,16 @@ if (!gotTheLock) {
     tray = new Tray(SYSTRAY_ICON);
 
     // tray icon tooltip
-    tray.setToolTip('Mechvibes');
+    tray.setToolTip('MechvibesPlusPlus');
 
     const startup_handler = new StartupHandler(app);
     const listen_handler = new ListenHandler(app);
-    const keyup_handler = new KeyupHandler(app)
+    const keyup_handler = new KeyupHandler(app);
 
     // context menu when hover on tray icon
     const contextMenu = Menu.buildFromTemplate([
       {
-        label: 'Mechvibes',
+        label: 'MechvibesPlusPlus',
         click: function () {
           // show app on click
           win.show();
@@ -155,7 +155,7 @@ if (!gotTheLock) {
         keyup_handler.toggle();
         win.webContents.send('theKeyup', keyup_handler.is_keyup);
       },
-    },
+      },
       {
         label: 'Enable at Startup',
         type: 'checkbox',
