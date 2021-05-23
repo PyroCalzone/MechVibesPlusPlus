@@ -24,7 +24,7 @@ You can download the Original Mechvibes [here](https://mechvibes.com/download/)
 
 # How to Install
 
-Download the latest release from the [Mechvibes++ Release Page (link)]()
+Download the latest release from the [Mechvibes++ Release Page (link)](https://github.com/PyroCalzone/MechVibesModified/releases/latest)
 
 
 
