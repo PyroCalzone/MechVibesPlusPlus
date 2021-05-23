@@ -12,7 +12,7 @@ We have just modified the code to add extra features
 
 **DO NOT** go into the Mechvibes Discord and ask for help with the software, or reporting an issue. 
 
-**Use the GitHub Issues Page or use our [Discord Server](https://discord.gg/WR5Ax6vXNU)
+**Use the GitHub Issues Page or use our [Discord Server](https://discord.gg/WR5Ax6vXNU)**
 
 # Credits
 
