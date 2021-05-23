@@ -2,6 +2,8 @@
 
 Adding KeyUp and KeyDown sounds to [Mechvibes](https://mechvibes.com/)
 
+[Join our Discord](https://discord.gg/WR5Ax6vXNU)
+
 # Important Notice
 
 **We are NOT MECHVIBES STAFF OR DEVELOPERS**
@@ -10,7 +12,7 @@ We have just modified the code to add extra features
 
 **DO NOT** go into the Mechvibes Discord and ask for help with the software, or reporting an issue. 
 
-**Use the GitHub Issues Page or DM one of us on Discord**
+**Use the GitHub Issues Page or use our [Discord Server](https://discord.gg/WR5Ax6vXNU)
 
 # Credits
 
