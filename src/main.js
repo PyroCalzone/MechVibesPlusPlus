@@ -148,7 +148,7 @@ if (!gotTheLock) {
         },
       },
       {
-      label: 'KeyupSounds',
+      label: 'Key Up Sounds',
       type: 'checkbox',
       checked: keyup_handler.is_keyup,
       click: function () {
