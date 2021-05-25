@@ -2,7 +2,6 @@
 const { app, BrowserWindow, Tray, Menu, shell, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs-extra');
-
 const StartupHandler = require('./utils/startup_handler');
 const ListenHandler = require('./utils/listen_handler');
 const KeyupHandler = require('./utils/keyup_handler');
@@ -35,6 +34,10 @@ function createWindow(show = true) {
     },
     show,
   });
+
+
+  //Developing tools. Extremely helpful.
+  //win.webContents.openDevTools()
 
   // remove menu bar
   win.removeMenu();
@@ -148,7 +151,7 @@ if (!gotTheLock) {
         },
       },
       {
-      label: 'Key Up Sounds',
+      label: 'KeyupSounds',
       type: 'checkbox',
       checked: keyup_handler.is_keyup,
       click: function () {

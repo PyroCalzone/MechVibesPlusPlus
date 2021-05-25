@@ -13,6 +13,7 @@ const path = require('path');
 const { platform } = process;
 const remapper = require('./utils/remapper');
 
+
 const MV_PACK_LSID = 'mechvibes-pack';
 const MV_VOL_LSID = 'mechvibes-volume';
 
@@ -51,7 +52,7 @@ async function loadPacks(status_display_elem, app_body) {
     const config_file = `${folder.replace(/\/$/, '')}/config.json`;
 
     // get pack info and defines data
-    const { name, includes_numpad, sound = '', defines, key_define_type = 'single' } = require(config_file);
+    const { name, includes_numpad, sound = '', defines, key_define_type = 'single', compatibility = false } = require(config_file);
 
     // pack sound pack data
     const pack_data = {
@@ -59,6 +60,7 @@ async function loadPacks(status_display_elem, app_body) {
       group: is_custom ? 'Custom' : 'Default',
       abs_path: folder,
       key_define_type,
+      compatibility,
       name,
       includes_numpad,
     };
@@ -262,7 +264,7 @@ function packsToOptions(packs, pack_list) {
       }
     });
     
-    var playKeyupSound = false
+    var playKeyupSound
     ipcRenderer.on('theKeyup', function (_event, _is_keyup) {
       is_keyup = _is_keyup;
       if (is_keyup) {
@@ -275,7 +277,7 @@ function packsToOptions(packs, pack_list) {
     // if key released, clear current key
     iohook.on('keyup', () => {
       if(playKeyupSound){
-        playSound(`keycode-00${current_key_down}`, store.get(MV_VOL_LSID))
+        playSound(`${current_key_down}`, store.get(MV_VOL_LSID), playKeyupSound, 'up')
       }
       current_key_down = null;
       app_logo.classList.remove('pressed');
@@ -296,16 +298,16 @@ function packsToOptions(packs, pack_list) {
       current_key_down = keycode;
 
       // pack sprite id
-      const sound_id = `keycode-${current_key_down}`;
+      const sound_id = `${current_key_down}`;
 
       // get loaded audio object
       // if object valid, pack volume and play sound
       if (current_pack) {
         if(playKeyupSound){
-          playSound(`keycode-0${current_key_down}`, store.get(MV_VOL_LSID))
+          playSound(`${current_key_down}`, store.get(MV_VOL_LSID), playKeyupSound, 'down')
         }
         else{
-          playSound(sound_id, store.get(MV_VOL_LSID));
+          playSound(sound_id, store.get(MV_VOL_LSID), playKeyupSound, 'null');
         }
       }
     });
@@ -314,16 +316,80 @@ function packsToOptions(packs, pack_list) {
 
 // ==================================================
 // universal play function
-function playSound(sound_id, volume) {
+function playSound(sound_id, volume, playKeyupSound, downOrUp) {
+
+  var initOne
+  var initTwo
+  const pack_compatibility = current_pack.compatibility ? current_pack.compatibility : false;
+  var keycode = `keycode-${sound_id}`;
+
+
+      //!Setting keycode correct for compat packs!
+      if(playKeyupSound && downOrUp == 'down' && pack_compatibility){
+        keycode = `keycode-0${sound_id}`
+      }
+      else if(playKeyupSound && downOrUp == 'up' && pack_compatibility){
+        keycode = `keycode-00${sound_id}`
+      }
+
   const play_type = current_pack.key_define_type ? current_pack.key_define_type : 'single';
-  const sound = play_type == 'single' ? current_pack.sound : current_pack.sound[sound_id];
+  const sound = play_type == 'single' ? current_pack.sound : current_pack.sound[keycode];
   if (!sound) {
     return;
   }
+
+
+      //!!Splitting sound up for non compat packs!! -- DOWN SOUND ONLY
+      var tempHoldings
+      if(playKeyupSound && !pack_compatibility && downOrUp == 'down'){
+        if(play_type == 'single'){
+          tempHoldings = sound['_sprite'][keycode]
+          initOne = sound['_sprite'][keycode][0] //Start Time
+          initTwo = sound['_sprite'][keycode][1] //Length
+            sound['_sprite'][keycode][1] = Math.floor(initTwo/2) //Length
+        }
+        else{
+          tempHoldings = sound['_sprite']['__default']
+          initOne = sound['_sprite']['__default'][0] //Start Time
+          initTwo = sound['_sprite']['__default'][1] //Length
+          sound['_sprite']['__default'][1] = Math.floor(initTwo/2) //Length
+        }
+      }
+
+      else if(playKeyupSound && !pack_compatibility && downOrUp == 'up'){
+        if(play_type == 'single'){
+          tempHoldings = sound['_sprite'][keycode]
+          initOne = sound['_sprite'][keycode][0] //Start Time
+          initTwo = sound['_sprite'][keycode][1] //Length
+            sound['_sprite'][keycode][0] = initOne+Math.floor((initTwo/2)) //Start Time
+            sound['_sprite'][keycode][1] = Math.floor(initTwo/2) //Length
+        }
+        else{
+          tempHoldings = sound['_sprite']['__default']
+          initOne = sound['_sprite']['__default'][0] //Start Time
+          initTwo = sound['_sprite']['__default'][1] //Length
+            sound['_sprite']['__default'][0] = initOne+Math.floor((initTwo/2)) //Start Time
+            sound['_sprite']['__default'][1] = Math.floor(initTwo/2) //Length
+        }
+      }
+
+
   sound.volume(Number(volume / 100));
   if (play_type == 'single') {
-    sound.play(sound_id);
+    sound.play(keycode);
   } else {
     sound.play();
   }
+
+      //Resetting values for non compat packs
+      if(playKeyupSound && !pack_compatibility){
+        if(play_type=='single'){
+          sound['_sprite'][keycode][0] = initOne
+          sound['_sprite'][keycode][1] = initTwo
+        }
+        else{
+          sound['_sprite']['__default'][0] = initOne
+          sound['_sprite']['__default'][1] = initTwo
+        }
+      }
 }
