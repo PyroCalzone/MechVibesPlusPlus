@@ -1,0 +1,14 @@
+{
+    "id": "custom-sound-pack-43252347",
+    "name": "Corsair M65 Elite",
+    "key_define_type": "multi",
+    "sound": "sound.ogg",
+    "defines": {
+        "1": "left-down.mp3",
+        "01": "left-up.mp3",
+        "2": "right-down.mp3",
+        "02": "right-up.mp3",
+        "3": "scroll-down.mp3",
+        "03": "scroll-up.mp3"
+    }
+}
