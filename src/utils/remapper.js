@@ -74,3 +74,6 @@ function remapper(from = 'standard', to = 'darwin', defines = {}) {
 }
 
 module.exports = remapper;
+
+
+// How do I make this compatible with mouse?
