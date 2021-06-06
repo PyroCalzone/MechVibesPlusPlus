@@ -5,19 +5,23 @@ const fs = require('fs-extra');
 const StartupHandler = require('./utils/startup_handler');
 const ListenHandler = require('./utils/listen_handler');
 const KeyupHandler = require('./utils/keyup_handler');
+const MouseHandler = require('./utils/mouse_handler');
 
 const SYSTRAY_ICON = path.join(__dirname, '/assets/system-tray-icon.png');
 const home_dir = app.getPath('home');
-const custom_dir = path.join(home_dir, '/mechvibes_custom');
+const keyboardcustom_dir = path.join(home_dir, '/mechvibes_custom');
+const mousecustom_dir = path.join(home_dir, '/mousevibes_custom');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 var win;
 var tray = null;
 global.app_version = app.getVersion();
-global.custom_dir = custom_dir;
+global.keyboardcustom_dir = keyboardcustom_dir;
+global.mousecustom_dir = mousecustom_dir;
 // create custom sound folder if not exists
-fs.ensureDirSync(custom_dir);
+fs.ensureDirSync(keyboardcustom_dir);
+fs.ensureDirSync(mousecustom_dir);
 
 function createWindow(show = true) {
   // Create the browser window.
@@ -119,6 +123,7 @@ if (!gotTheLock) {
     const startup_handler = new StartupHandler(app);
     const listen_handler = new ListenHandler(app);
     const keyup_handler = new KeyupHandler(app);
+    const mouse_handler = new MouseHandler(app);
 
     // context menu when hover on tray icon
     const contextMenu = Menu.buildFromTemplate([
@@ -136,9 +141,15 @@ if (!gotTheLock) {
         },
       },
       {
-        label: 'Custom Folder',
+        label: 'Keyboard Sound Custom Folder',
         click: function () {
-          shell.openItem(custom_dir);
+          shell.openItem(keyboardcustom_dir);
+        },
+      },
+      {
+        label: 'Mouse Sound Custom Folder',
+        click: function () {
+          shell.openItem(mousecustom_dir);
         },
       },
       {
@@ -157,7 +168,16 @@ if (!gotTheLock) {
       click: function () {
         keyup_handler.toggle();
         win.webContents.send('theKeyup', keyup_handler.is_keyup);
+        },
       },
+      {
+        label: 'MouseSounds',
+        type: 'checkbox',
+        checked: mouse_handler.is_mousesounds,
+        click: function () {
+          mouse_handler.toggle();
+          win.webContents.send('MouseSounds', mouse_handler.is_mousesounds);
+        },
       },
       {
         label: 'Enable at Startup',
