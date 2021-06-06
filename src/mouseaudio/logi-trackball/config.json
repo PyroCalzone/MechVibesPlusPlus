@@ -1,0 +1,14 @@
+{
+    "id": "custom-sound-pack-28658750",
+    "name": "Logitech M570 Trackball",
+    "key_define_type": "multi",
+    "sound": "sound.ogg",
+    "defines": {
+        "1": "left-down.mp3",
+        "01": "left-up.mp3",
+        "2": "right-down.mp3",
+        "02": "right-up.mp3",
+        "3": "scroll-down.mp3",
+        "03": "scroll-up.mp3"
+    }
+}
