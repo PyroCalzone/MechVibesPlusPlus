@@ -1,6 +1,6 @@
 # Mechvibes++
 
-Adding KeyUp and KeyDown sounds to [Mechvibes](https://mechvibes.com/)
+Adding KeyUp and Mouse sounds to [Mechvibes](https://mechvibes.com/)
 
 [Join our Discord](https://discord.gg/WR5Ax6vXNU)
 
