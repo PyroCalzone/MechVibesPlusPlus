@@ -17,7 +17,8 @@ const remapper = require('./utils/remapper');
 
 const MV_KEYBOARD_PACK_LSID = 'mechvibes-pack';
 const MV_MOUSE_PACK_LSID = 'mechvibes-mousepack';
-const MV_VOL_LSID = 'mechvibes-volume';
+const MV_KEY_VOL_LSID = 'mechvibes-volume-keyboard';
+const MV_MOUSE_VOL_LSID = 'mechvibes-volume-mouse';
 
 const KEYBOARD_CUSTOM_PACKS_DIR = remote.getGlobal('keyboardcustom_dir');
 const KEYBOARD_OFFICIAL_PACKS_DIR = path.join(__dirname, 'keyboardaudio');
@@ -297,8 +298,11 @@ function packsToOptions(packs, pack_list, korm) {
     const app_body = document.getElementById('app-body');
     const keyboardpack_list = document.getElementById('keyboardpack-list');
     const mousepack_list = document.getElementById('mousepack-list');
-    const volume_value = document.getElementById('volume-value-display');
-    const volume = document.getElementById('volume');
+    const volume_value = document.getElementById('keyboard-volume-value-display');
+    const volume = document.getElementById('keyvolume');
+    const mouse_volume_value = document.getElementById('mouse-volume-value-display');
+    const mouse_volume = document.getElementById('mousevolume');
+    const mouseslider = document.getElementById('MouseVolSlider');
 
     // set app version
     version.innerHTML = APP_VERSION;
@@ -333,13 +337,22 @@ function packsToOptions(packs, pack_list, korm) {
     current_mouse_pack = getPack('mouse');
 
     // display volume value
-    if (store.get(MV_VOL_LSID)) {
-      volume.value = store.get(MV_VOL_LSID);
+    if (store.get(MV_KEY_VOL_LSID)) {
+      volume.value = store.get(MV_KEY_VOL_LSID);
     }
     volume_value.innerHTML = volume.value;
     volume.oninput = function (e) {
       volume_value.innerHTML = this.value;
-      store.set(MV_VOL_LSID, this.value);
+      store.set(MV_KEY_VOL_LSID, this.value);
+    };
+
+    if (store.get(MV_MOUSE_VOL_LSID)) {
+      mouse_volume.value = store.get(MV_MOUSE_VOL_LSID);
+    }
+    mouse_volume_value.innerHTML = mouse_volume.value;
+    mouse_volume.oninput = function (e) {
+      mouse_volume_value.innerHTML = this.value;
+      store.set(MV_MOUSE_VOL_LSID, this.value);
     };
 
     if (!is_muted) {
@@ -371,8 +384,16 @@ function packsToOptions(packs, pack_list, korm) {
       is_mousesounds = _is_mousesounds;
       if (is_mousesounds) {
         playMouseSounds = true
+        mouse_volume_value.classList.remove('hidden');
+        mouse_volume.classList.remove('hidden');
+        mousepack_list.classList.remove('hidden');
+        mouseslider.classList.remove('hidden');
       } else {
         playMouseSounds = false
+        mouseslider.classList.add('hidden');
+        mousepack_list.classList.add('hidden');
+        mouse_volume_value.classList.add('hidden');
+        mouse_volume.classList.add('hidden');
       }
     });
 
@@ -390,14 +411,14 @@ function packsToOptions(packs, pack_list, korm) {
         const sound_id = `${current_mouse_down}`;
 
         if (current_mouse_pack) {
-          playMouseSound(`${sound_id}`, store.get(MV_VOL_LSID), 'down')
+          playMouseSound(`${sound_id}`, store.get(MV_MOUSE_VOL_LSID), 'down')
         }
       }
     })
 
     iohook.on('mouseup', () => {
       if(playMouseSounds){
-        playMouseSound(`${current_mouse_down}`, store.get(MV_VOL_LSID), 'up')
+        playMouseSound(`${current_mouse_down}`, store.get(MV_MOUSE_VOL_LSID), 'up')
       }
       current_mouse_down = null;
     })
@@ -405,7 +426,7 @@ function packsToOptions(packs, pack_list, korm) {
     // if key released, clear current key
     iohook.on('keyup', () => {
       if(playKeyupSound){
-        playSound(`${current_key_down}`, store.get(MV_VOL_LSID), playKeyupSound, 'up')
+        playSound(`${current_key_down}`, store.get(MV_KEY_VOL_LSID), playKeyupSound, 'up')
       }
       current_key_down = null;
       app_logo.classList.remove('pressed');
@@ -432,10 +453,10 @@ function packsToOptions(packs, pack_list, korm) {
       // if object valid, pack volume and play sound
       if (current_keyboard_pack) {
         if(playKeyupSound){
-          playSound(`${current_key_down}`, store.get(MV_VOL_LSID), playKeyupSound, 'down')
+          playSound(`${current_key_down}`, store.get(MV_KEY_VOL_LSID), playKeyupSound, 'down')
         }
         else{
-          playSound(sound_id, store.get(MV_VOL_LSID), playKeyupSound, 'null');
+          playSound(sound_id, store.get(MV_KEY_VOL_LSID), playKeyupSound, 'null');
         }
       }
     });
