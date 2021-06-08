@@ -1,0 +1,14 @@
+{
+    "id": "custom-sound-pack-90696052",
+    "name": "Corsair Harpoon RGB",
+    "key_define_type": "multi",
+    "sound": "sound.ogg",
+    "defines": {
+        "1": "left-down.m4a",
+        "01": "left-up.m4a",
+        "2": "right-down.m4a",
+        "02": "right-up.m4a",
+        "3": "scroll-down.m4a",
+        "03": "scroll-up.m4a"
+    }
+}
