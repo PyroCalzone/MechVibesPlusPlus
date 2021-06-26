@@ -21,9 +21,9 @@ const MV_KEY_VOL_LSID = 'mechvibes-volume-keyboard';
 const MV_MOUSE_VOL_LSID = 'mechvibes-volume-mouse';
 
 const KEYBOARD_CUSTOM_PACKS_DIR = remote.getGlobal('keyboardcustom_dir');
-const KEYBOARD_OFFICIAL_PACKS_DIR = path.join(__dirname, 'keyboardaudio');
+const KEYBOARD_OFFICIAL_PACKS_DIR = path.join(__dirname, 'sounds', 'keys');
 const MOUSE_CUSTOM_PACKS_DIR = remote.getGlobal('mousecustom_dir');
-const MOUSE_OFFICIAL_PACKS_DIR = path.join(__dirname, 'mouseaudio');
+const MOUSE_OFFICIAL_PACKS_DIR = path.join(__dirname, 'sounds', 'mouse');
 const APP_VERSION = remote.getGlobal('app_version');
 
 let current_keyboard_pack = null;
