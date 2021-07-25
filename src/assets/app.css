@@ -52,6 +52,13 @@ a:hover {
   border-radius: 5px;
 }
 
+#soundpack-bug {
+  padding: 8px 5px;
+  border: 1px solid #505050;
+  background: #161616;
+  border-radius: 5px;
+}
+
 .mb-0 {
   margin-bottom: 0;
 }
