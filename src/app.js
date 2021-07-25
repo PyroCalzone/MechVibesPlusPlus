@@ -12,8 +12,7 @@ const iohook = require('iohook');
 const path = require('path');
 const { platform } = process;
 const remapper = require('./utils/remapper');
-
-// Now for the annoying part :|
+const fs = require('fs-extra')
 
 const MV_KEYBOARD_PACK_LSID = 'mechvibes-pack';
 const MV_MOUSE_PACK_LSID = 'mechvibes-mousepack';
@@ -21,9 +20,9 @@ const MV_KEY_VOL_LSID = 'mechvibes-volume-keyboard';
 const MV_MOUSE_VOL_LSID = 'mechvibes-volume-mouse';
 
 const KEYBOARD_CUSTOM_PACKS_DIR = remote.getGlobal('keyboardcustom_dir');
-const KEYBOARD_OFFICIAL_PACKS_DIR = path.join(__dirname, 'sounds', 'keys');
+const KEYBOARD_OFFICIAL_PACKS_DIR = path.join(__dirname, 'keyboardaudio');
 const MOUSE_CUSTOM_PACKS_DIR = remote.getGlobal('mousecustom_dir');
-const MOUSE_OFFICIAL_PACKS_DIR = path.join(__dirname, 'sounds', 'mouse');
+const MOUSE_OFFICIAL_PACKS_DIR = path.join(__dirname, 'mouseaudio');
 const APP_VERSION = remote.getGlobal('app_version');
 
 let current_keyboard_pack = null;
@@ -51,130 +50,138 @@ async function loadPacks(status_display_elem, app_body) {
   const folders = [...official_packs, ...custom_packs];
   const mouse_folders = [...mouse_official_packs, ...mouse_custom_packs];
 
+  var fucked = false
+
   // get pack data
   folders.map((folder) => {
-    // define group by types
-    const is_custom = folder.indexOf('mechvibes_custom') > -1 ? true : false;
-
-    // get folder name
-    const splited = folder.split('/');
-    const folder_name = splited[splited.length - 2];
-
-    // define config file path
-    const config_file = `${folder.replace(/\/$/, '')}/config.json`;
-
-    // get pack info and defines data
-    const { name, includes_numpad, sound = '', defines, key_define_type = 'single', compatibility = false } = require(config_file);
-
-    // pack sound pack data
-    const pack_data = {
-      pack_id: `${is_custom ? 'custom' : 'default'}-${folder_name}`,
-      group: is_custom ? 'Custom' : 'Default',
-      abs_path: folder,
-      key_define_type,
-      compatibility,
-      name,
-      includes_numpad,
-    };
-
-    // init sound data
-    if (key_define_type == 'single') {
-      // define sound path
-      const sound_path = `${folder}${sound}`;
-      const sound_data = new Howl({ src: [sound_path], sprite: keycodesRemap(defines) });
-      Object.assign(pack_data, { sound: sound_data });
-      all_sound_files[pack_data.pack_id] = false;
-      // event when sound loaded
-      sound_data.once('load', function () {
-        all_sound_files[pack_data.pack_id] = true;
-        checkIfAllSoundLoaded(status_display_elem, app_body);
-      });
-    } else {
-      const sound_data = {};
-      Object.keys(defines).map((kc) => {
-        if (defines[kc]) {
+      try{
+        // define group by types
+        const is_custom = folder.indexOf('mechvibes_custom') > -1 ? true : false;
+        
+        // get folder name
+        const splited = folder.split('/');
+        const folder_name = splited[splited.length - 2];
+        
+        // define config file path
+        const config_file = `${folder.replace(/\/$/, '')}/config.json`;
+        
+        // get pack info and defines data
+        const { name, includes_numpad, sound = '', defines, key_define_type = 'single', compatibility = false } = require(config_file);
+        
+        // pack sound pack data
+        const pack_data = {
+          pack_id: `${is_custom ? 'custom' : 'default'}-${folder_name}`,
+          group: is_custom ? 'Custom' : 'Default',
+          abs_path: folder,
+          key_define_type,
+          compatibility,
+          name,
+          includes_numpad,
+        };
+        
+        // init sound data
+        if (key_define_type == 'single') {
           // define sound path
-          const sound_path = `${folder}${defines[kc]}`;
-          sound_data[kc] = new Howl({ src: [sound_path] });
-          all_sound_files[`${pack_data.pack_id}-${kc}`] = false;
-          // event when sound_data loaded
-          sound_data[kc].once('load', function () {
-            all_sound_files[`${pack_data.pack_id}-${kc}`] = true;
+          const sound_path = `${folder}${sound}`;
+          const sound_data = new Howl({ src: [sound_path], sprite: keycodesRemap(defines) });
+          Object.assign(pack_data, { sound: sound_data });
+          all_sound_files[pack_data.pack_id] = false;
+          // event when sound loaded
+          sound_data.once('load', function () {
+            all_sound_files[pack_data.pack_id] = true;
             checkIfAllSoundLoaded(status_display_elem, app_body);
           });
+        } else {
+          const sound_data = {};
+          Object.keys(defines).map((kc) => {
+            if (defines[kc]) {
+              // define sound path
+              const sound_path = `${folder}${defines[kc]}`;
+              sound_data[kc] = new Howl({ src: [sound_path] });
+              all_sound_files[`${pack_data.pack_id}-${kc}`] = false;
+              // event when sound_data loaded
+              sound_data[kc].once('load', function () {
+                all_sound_files[`${pack_data.pack_id}-${kc}`] = true;
+                checkIfAllSoundLoaded(status_display_elem, app_body);
+              });
+            }
+          });
+          if (Object.keys(sound_data).length) {
+            Object.assign(pack_data, { sound: keycodesRemap(sound_data) });
+          }
         }
-      });
-      if (Object.keys(sound_data).length) {
-        Object.assign(pack_data, { sound: keycodesRemap(sound_data) });
-      }
-    }
+        
+        // push pack data to pack list
+        keyboardpacks.push(pack_data);
+      } catch(err){fucked = true}
+    });
+    
+    mouse_folders.map((folder) => {
+      try{
+        // define group by types
+        const is_custom = folder.indexOf('mousevibes_custom') > -1 ? true : false;
+        
+        // get folder name
+        const splited = folder.split('/');
+        const folder_name = splited[splited.length - 2];
+        
+        // define config file path
+        const config_file = `${folder.replace(/\/$/, '')}/config.json`;
+        
+        // get pack info and defines data
+        const { name, sound = '', defines, key_define_type = 'single'} = require(config_file);
 
-    // push pack data to pack list
-    keyboardpacks.push(pack_data);
-  });
+        // pack sound pack data
+        const pack_data = {
+          pack_id: `${is_custom ? 'custom' : 'default'}-${folder_name}`,
+          group: is_custom ? 'Custom' : 'Default',
+          abs_path: folder,
+          key_define_type,
+          name,
+        };
 
-  mouse_folders.map((folder) => {
-    // define group by types
-    const is_custom = folder.indexOf('mousevibes_custom') > -1 ? true : false;
-
-    // get folder name
-    const splited = folder.split('/');
-    const folder_name = splited[splited.length - 2];
-
-    // define config file path
-    const config_file = `${folder.replace(/\/$/, '')}/config.json`;
-
-    // get pack info and defines data
-    const { name, sound = '', defines, key_define_type = 'single'} = require(config_file);
-
-    // pack sound pack data
-    const pack_data = {
-      pack_id: `${is_custom ? 'custom' : 'default'}-${folder_name}`,
-      group: is_custom ? 'Custom' : 'Default',
-      abs_path: folder,
-      key_define_type,
-      name,
-    };
-
-    // init sound data
-    if (key_define_type == 'single') { //This wont work, I still don't give a shit. Maybe??
-      // define sound path
-      const sound_path = `${folder}${sound}`;
-      const sound_data = new Howl({ src: [sound_path], sprite: keycodesRemap(defines) });
-      Object.assign(pack_data, { sound: sound_data });
-      all_sound_files[pack_data.pack_id] = false;
-      // event when sound loaded
-      sound_data.once('load', function () {
-        all_sound_files[pack_data.pack_id] = true;
-        checkIfAllSoundLoaded(status_display_elem, app_body);
-      });
-    } else {
-      const sound_data = {};
-      Object.keys(defines).map((kc) => {
-        if (defines[kc]) {
+        // init sound data
+        if (key_define_type == 'single') { //This wont work, I still don't give a shit. Maybe??
           // define sound path
-          const sound_path = `${folder}${defines[kc]}`;
-          sound_data[kc] = new Howl({ src: [sound_path] });
-          all_sound_files[`${pack_data.pack_id}-${kc}`] = false;
-          // event when sound_data loaded
-          sound_data[kc].once('load', function () {
-            all_sound_files[`${pack_data.pack_id}-${kc}`] = true;
+          const sound_path = `${folder}${sound}`;
+          const sound_data = new Howl({ src: [sound_path], sprite: keycodesRemap(defines) });
+          Object.assign(pack_data, { sound: sound_data });
+          all_sound_files[pack_data.pack_id] = false;
+          // event when sound loaded
+          sound_data.once('load', function () {
+            all_sound_files[pack_data.pack_id] = true;
             checkIfAllSoundLoaded(status_display_elem, app_body);
           });
+        } else {
+          const sound_data = {};
+          Object.keys(defines).map((kc) => {
+            if (defines[kc]) {
+              // define sound path
+              const sound_path = `${folder}${defines[kc]}`;
+              sound_data[kc] = new Howl({ src: [sound_path] });
+              all_sound_files[`${pack_data.pack_id}-${kc}`] = false;
+              // event when sound_data loaded
+              sound_data[kc].once('load', function () {
+                all_sound_files[`${pack_data.pack_id}-${kc}`] = true;
+                checkIfAllSoundLoaded(status_display_elem, app_body);
+              });
+            }
+          });
+          if (Object.keys(sound_data).length) {
+            Object.assign(pack_data, { sound: keycodesRemap(sound_data) });
+          }
         }
-      });
-      if (Object.keys(sound_data).length) {
-        Object.assign(pack_data, { sound: keycodesRemap(sound_data) });
-      }
-    }
 
-    // push pack data to pack list
-    mousepacks.push(pack_data);
-  });
+        // push pack data to pack list
+        mousepacks.push(pack_data);
+      } catch(err){fucked = true}
+    });
 
   // end load
-  return;
+  console.log(fucked)
+  return fucked;
 }
+
 
 // ==================================================
 // check if all packs loaded
@@ -303,12 +310,18 @@ function packsToOptions(packs, pack_list, korm) {
     const mouse_volume_value = document.getElementById('mouse-volume-value-display');
     const mouse_volume = document.getElementById('mousevolume');
     const mouseslider = document.getElementById('MouseVolSlider');
+    const soundpackbug = document.getElementById('soundpack-bug');
 
     // set app version
     version.innerHTML = APP_VERSION;
 
     // load all packs
-    await loadPacks(app_logo, app_body);
+    var fuckcheck = await loadPacks(app_logo, app_body);
+
+    if(fuckcheck){
+      console.log("Removing uhh")
+      soundpackbug.classList.remove('hidden');
+    }
 
     // transform packs to options list
     packsToOptions(keyboardpacks, keyboardpack_list, 'keyboard');
