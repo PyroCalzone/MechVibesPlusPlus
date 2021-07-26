@@ -39,10 +39,6 @@ function createWindow(show = true) {
     show,
   });
 
-
-  //Developing tools. Extremely helpful.
-  //win.webContents.openDevTools()
-
   // remove menu bar
   win.removeMenu();
 
@@ -50,8 +46,8 @@ function createWindow(show = true) {
   win.loadFile('./src/app.html');
 
   // Open the DevTools.
-  // win.openDevTools();
-  // win.webContents.openDevTools();
+  //win.openDevTools();
+  //win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', function () {
@@ -162,7 +158,7 @@ if (!gotTheLock) {
         },
       },
       {
-      label: 'KeyupSounds',
+      label: 'Keyup Sounds',
       type: 'checkbox',
       checked: keyup_handler.is_keyup,
       click: function () {
@@ -171,7 +167,7 @@ if (!gotTheLock) {
         },
       },
       {
-        label: 'MouseSounds',
+        label: 'Mouse Sounds',
         type: 'checkbox',
         checked: mouse_handler.is_mousesounds,
         click: function () {

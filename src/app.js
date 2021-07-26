@@ -30,8 +30,8 @@ let current_mouse_pack = null;
 let current_key_down = null;
 let current_mouse_down = null;
 let is_muted = store.get('mechvibes-muted') || false;
-let is_keyup = store.get('mechvibes-keyup') || true;
-let is_mousesounds = store.get('mechvibes-mouse') || true;
+let is_keyup = store.get('mechvibes-keyup') || false;
+let is_mousesounds = store.get('mechvibes-mouse') || false;
 const keyboardpacks = [];
 const mousepacks = [];
 const all_sound_files = {};
@@ -371,7 +371,7 @@ function packsToOptions(packs, pack_list, korm) {
     if (!is_muted) {
       iohook.start();
     }
-
+    
     // listen to key press
     ipcRenderer.on('muted', function (_event, _is_muted) {
       is_muted = _is_muted;
@@ -383,6 +383,11 @@ function packsToOptions(packs, pack_list, korm) {
     });
     
     var playKeyupSound
+
+    if(is_keyup){
+      playKeyupSound = true
+    }
+
     ipcRenderer.on('theKeyup', function (_event, _is_keyup) {
       is_keyup = _is_keyup;
       if (is_keyup) {
@@ -393,6 +398,15 @@ function packsToOptions(packs, pack_list, korm) {
     });
 
     var playMouseSounds
+
+    if(is_mousesounds){
+      playMouseSounds = true
+      mouse_volume_value.classList.remove('hidden');
+      mouse_volume.classList.remove('hidden');
+      mousepack_list.classList.remove('hidden');
+      mouseslider.classList.remove('hidden');
+    }
+
     ipcRenderer.on('MouseSounds', function (_event, _is_mousesounds) {
       is_mousesounds = _is_mousesounds;
       if (is_mousesounds) {
@@ -409,9 +423,6 @@ function packsToOptions(packs, pack_list, korm) {
         mouse_volume.classList.add('hidden');
       }
     });
-
-
-    //This is where I plot to killmyself. :|
 
     iohook.on('mousedown', ({ button }) => {
       if(playMouseSounds){
