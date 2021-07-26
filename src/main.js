@@ -6,6 +6,7 @@ const StartupHandler = require('./utils/startup_handler');
 const ListenHandler = require('./utils/listen_handler');
 const KeyupHandler = require('./utils/keyup_handler');
 const MouseHandler = require('./utils/mouse_handler');
+const RandomHandler = require('./utils/random_handler');
 
 const SYSTRAY_ICON = path.join(__dirname, '/assets/system-tray-icon.png');
 const home_dir = app.getPath('home');
@@ -120,6 +121,7 @@ if (!gotTheLock) {
     const listen_handler = new ListenHandler(app);
     const keyup_handler = new KeyupHandler(app);
     const mouse_handler = new MouseHandler(app);
+    const random_handler = new RandomHandler(app);
 
     // context menu when hover on tray icon
     const contextMenu = Menu.buildFromTemplate([
@@ -173,6 +175,15 @@ if (!gotTheLock) {
         click: function () {
           mouse_handler.toggle();
           win.webContents.send('MouseSounds', mouse_handler.is_mousesounds);
+        },
+      },
+      {
+        label: 'Random Sounds',
+        type: 'checkbox',
+        checked: random_handler.is_random,
+        click: function () {
+          random_handler.toggle();
+          win.webContents.send('RandomSoundEnable', random_handler.is_random);
         },
       },
       {

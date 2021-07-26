@@ -12,7 +12,6 @@ const iohook = require('iohook');
 const path = require('path');
 const { platform } = process;
 const remapper = require('./utils/remapper');
-const fs = require('fs-extra')
 
 const MV_KEYBOARD_PACK_LSID = 'mechvibes-pack';
 const MV_MOUSE_PACK_LSID = 'mechvibes-mousepack';
@@ -32,6 +31,7 @@ let current_mouse_down = null;
 let is_muted = store.get('mechvibes-muted') || false;
 let is_keyup = store.get('mechvibes-keyup') || false;
 let is_mousesounds = store.get('mechvibes-mouse') || false;
+let is_random = store.get('mechvibes-random') || false;
 const keyboardpacks = [];
 const mousepacks = [];
 const all_sound_files = {};
@@ -178,7 +178,6 @@ async function loadPacks(status_display_elem, app_body) {
     });
 
   // end load
-  console.log(fucked)
   return fucked;
 }
 
@@ -319,7 +318,6 @@ function packsToOptions(packs, pack_list, korm) {
     var fuckcheck = await loadPacks(app_logo, app_body);
 
     if(fuckcheck){
-      console.log("Removing uhh")
       soundpackbug.classList.remove('hidden');
     }
 
@@ -424,6 +422,22 @@ function packsToOptions(packs, pack_list, korm) {
       }
     });
 
+    //Random Sounds
+    var randomSounds
+    
+    if(is_random){
+      randomSounds = true
+    }
+
+    ipcRenderer.on('RandomSoundEnable', function (_event, _is_random) {
+      is_random = _is_random;
+      if (is_random) {
+        randomSounds = true
+      } else {
+        randomSounds = false
+      }
+    });
+
     iohook.on('mousedown', ({ button }) => {
       if(playMouseSounds){
         if (current_mouse_down != null && current_mouse_down == button) {
@@ -468,10 +482,14 @@ function packsToOptions(packs, pack_list, korm) {
       app_logo.classList.add('pressed');
 
       // pack current pressed key
-      current_key_down = keycode;
+      if(randomSounds){
+        current_key_down = Math.floor(Math.random() * 82)+1;
+      }
+      else{
+        current_key_down = keycode
+      }
 
-      // pack sprite id
-      const sound_id = `${current_key_down}`;
+      var sound_id = `${current_key_down}`;
 
       // get loaded audio object
       // if object valid, pack volume and play sound
