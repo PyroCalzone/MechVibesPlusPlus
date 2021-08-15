@@ -1,41 +1,59 @@
-# Mechvibes++
+![Mechvibes++](https://i.imgur.com/IJsQMg1.png)
 
-Making modifications to [Mechvibes](https://mechvibes.com/)
+Mechvibes. Reimagined.
+
+Mechvibes++ brings mouse sounds and keyboard down and up sounds to Mechvibes.
 
 [Join our Discord](https://discord.gg/WR5Ax6vXNU)
 
-# Requirements
+Made by !Pyro !#4319 and SaturnDev#2937 (discord names)
+
+# How do I use it?
+
+Its simple. Install the program, pick a soundpack, press down a key, and let the key back up, and you hear the sound of the key being pressed up and down from your computer speakers. Same process with a mouse.
+
+And, you can even make your own custom soundpacks.
+
+Its all free!
+
+# Requirements 
 
 - [Microsoft VC Redist 2015-2019 x64](https://aka.ms/vs/16/release/vc_redist.x64.exe)
 - 64bit PC
 - Running Windows 10 or newer (Windows 11 support has not been tested)
 - 167mb storage availible 
 
-# Important Notice
+**Notice:**
 
-Linux & MacOS Support has not been added
+Linux and MacOS support has not been added.
 
-**We are NOT MECHVIBES STAFF OR DEVELOPERS**
+# Important
 
-We have just modified the code to add extra features
+We are not the Mechvibes developers. 
 
-**DO NOT** go into the Mechvibes Discord and ask for help with the software, or reporting an issue. 
+Please do not go into the Mechvibes discord for support. Please [Join our Discord](https://discord.gg/WR5Ax6vXNU)
 
-**Use the GitHub Issues Page or use our [Discord Server](https://discord.gg/WR5Ax6vXNU)**
+The creator of Mechvibes, hainguyents13, has approval of this program
 
-# Credits
+Please support Mechvibes. You can download it [here](https://mechvibes.com/download/)
 
-Made by @!Pyro!#0967 and @SaturnDev#3797
+# Install
 
-If you are hainguyen13 or Akira#1111 and would like this to be taken down, please shoot me (saturn) or Pyro a DM on Discord
+Download the latest release from the [Mechvibes++ Release Page](https://github.com/PyroCalzone/MechVibesModified/releases/latest)
 
-# Please Support Mechvibes
+Run the exe installer.
 
-You can download the Original Mechvibes [here](https://mechvibes.com/download/)
+Wait for the download to finish, and enjoy!
 
-# How to Install
+# Problems & Issues
 
-Download the latest release from the [Mechvibes++ Release Page (link)](https://github.com/PyroCalzone/MechVibesModified/releases/latest)
+Make sure you have installed [Microsoft VC Redist 2015-2019 x64](https://aka.ms/vs/16/release/vc_redist.x64.exe) 
+
+You can ask for help and support on issues in our [Discord Server](https://discord.gg/WR5Ax6vXNU)
+
+
+
+
 
 
 
