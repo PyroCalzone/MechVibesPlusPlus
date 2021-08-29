@@ -21,7 +21,7 @@ Its all free!
 - [Microsoft VC Redist 2015-2019 x64](https://aka.ms/vs/16/release/vc_redist.x64.exe)
 - 64bit PC
 - Running Windows 10 or newer (Windows 11 support has not been tested)
-- 167mb storage availible 
+- 167mb storage available 
 
 **Notice:**
 
