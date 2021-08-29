@@ -151,6 +151,13 @@ if (!gotTheLock) {
         },
       },
       {
+        label: 'Open Devtools',
+        click: function () {
+          win.openDevTools();
+          win.webContents.openDevTools();
+        },
+      },
+      {
         label: 'Mute',
         type: 'checkbox',
         checked: listen_handler.is_muted,
