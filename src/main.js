@@ -158,6 +158,12 @@ if (!gotTheLock) {
         },
       },
       {
+        label: 'Refresh Soundpacks',
+        click: function () {
+          win.webContents.send('refresh')
+        },
+      },
+      {
         label: 'Mute',
         type: 'checkbox',
         checked: listen_handler.is_muted,

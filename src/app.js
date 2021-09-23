@@ -19,9 +19,9 @@ const MV_KEY_VOL_LSID = 'mechvibes-volume-keyboard';
 const MV_MOUSE_VOL_LSID = 'mechvibes-volume-mouse';
 
 const KEYBOARD_CUSTOM_PACKS_DIR = remote.getGlobal('keyboardcustom_dir');
-const KEYBOARD_OFFICIAL_PACKS_DIR = path.join(__dirname, 'keyboardaudio');
+const KEYBOARD_OFFICIAL_PACKS_DIR = path.join(__dirname, 'sounds/keys');
 const MOUSE_CUSTOM_PACKS_DIR = remote.getGlobal('mousecustom_dir');
-const MOUSE_OFFICIAL_PACKS_DIR = path.join(__dirname, 'mouseaudio');
+const MOUSE_OFFICIAL_PACKS_DIR = path.join(__dirname, 'sounds/mouse');
 const APP_VERSION = remote.getGlobal('app_version');
 
 let current_keyboard_pack = null;
@@ -258,6 +258,7 @@ function packsToOptions(packs, pack_list, korm) {
   for (let group of groups) {
     const optgroup = document.createElement('optgroup');
     optgroup.label = group.name;
+    optgroup.class = group.name;
     for (let pack of group.packs) {
       // check if selected
       const is_selected = selected_pack_id == pack.pack_id;
@@ -366,6 +367,29 @@ function packsToOptions(packs, pack_list, korm) {
       mouse_volume_value.innerHTML = this.value;
       store.set(MV_MOUSE_VOL_LSID, this.value);
     };
+
+    function removeOptions(selectElement) {
+      for(var i = 0; i>=500; i++) {
+         selectElement.remove(0);
+      }
+   }
+
+    ipcRenderer.on("refresh", () => {
+      const $ = require('jquery');
+      removeOptions(document.getElementById('keyboardpack-list'));
+      $('#keyboardpack-list').find('optgroup').remove();
+      removeOptions(document.getElementById('mousepack-list'));
+      $('#mousepack-list').find('optgroup').remove();
+      
+      loadPacks(app_logo, app_body)
+
+
+      // transform packs to options list
+      packsToOptions(keyboardpacks, keyboardpack_list, 'keyboard');
+      packsToOptions(mousepacks, mousepack_list, 'mouse');
+
+      app_logo.innerHTML = "Mechvibes++";
+    })
 
     if (!is_muted) {
       iohook.start();
