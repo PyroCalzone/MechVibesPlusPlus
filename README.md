@@ -18,14 +18,11 @@ Its all free!
 
 # Requirements 
 
-- [Microsoft VC Redist 2015-2019 x64](https://aka.ms/vs/16/release/vc_redist.x64.exe)
-- 64bit PC
-- Running Windows 10 or newer (Windows 11 support has not been tested)
+- [Microsoft VC Redist 2015-2019 x64](https://aka.ms/vs/16/release/vc_redist.x64.exe) | If Mechvibes is installed and works correctly, you do not need to install this as it already is 
+- 64bit (x64) based PC
+- Running Windows 10 / Windows 11 [MacOS / Linux / ChromeOS has no support. Feel free to fork and make your own, and submit a pull request]
 - 167mb storage available 
-
-**Notice:**
-
-Linux and MacOS support has not been added.
+- Recommended to have >6gb RAM because this program **may** take up high amounts of RAM. We are well aware and have plans on fixing.
 
 # Important
 
@@ -52,7 +49,10 @@ Make sure you have installed [Microsoft VC Redist 2015-2019 x64](https://aka.ms/
 You can ask for help and support on issues in our [Discord Server](https://discord.gg/WR5Ax6vXNU)
 
 
-
+**If it gets flagged as a virus, you can:**
+- Read through our open sourced code on this very GitHub repository 
+- Scan the exe installer with your antivirus of choice
+- Click "read more" then "Run anyway"
 
 
 
