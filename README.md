@@ -1,7 +1,5 @@
 ![Mechvibes++](https://i.imgur.com/IJsQMg1.png)
 
-Mechvibes. Reimagined.
-
 Mechvibes++ brings mouse sounds and keyboard down and up sounds to Mechvibes.
 
 [Join our Discord](https://discord.gg/WR5Ax6vXNU)
