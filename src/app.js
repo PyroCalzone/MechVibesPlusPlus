@@ -503,7 +503,7 @@ function packsToOptions(packs, pack_list, korm) {
       catch{
         console.log("Caught bad keypress")
       }
-      if(keyPressedList.length() < 1){        
+      if(keyPressedList.length < 1){        
         app_logo.classList.remove('pressed');
       }
     });
