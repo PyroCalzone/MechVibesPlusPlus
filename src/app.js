@@ -33,8 +33,8 @@ let is_muted = store.get('mechvibes-muted') || false;
 let is_keyup = store.get('mechvibes-keyup') || false;
 let is_mousesounds = store.get('mechvibes-mouse') || false;
 let is_random = store.get('mechvibes-random') || false;
-const keyboardpacks = [];
-const mousepacks = [];
+let keyboardpacks = [];
+let mousepacks = [];
 const all_sound_files = {};
 
 // ==================================================
@@ -375,14 +375,19 @@ function packsToOptions(packs, pack_list, korm) {
       }
    }
 
-    ipcRenderer.on("refresh", () => {
+    ipcRenderer.on("refresh", async () => {
       const $ = require('jquery');
       removeOptions(document.getElementById('keyboardpack-list'));
+      $('#keyboardpack-list').find('optgroup').empty();
       $('#keyboardpack-list').find('optgroup').remove();
       removeOptions(document.getElementById('mousepack-list'));
+      $('#mousepack-list').find('optgroup').empty();
       $('#mousepack-list').find('optgroup').remove();
       
-      loadPacks(app_logo, app_body)
+      keyboardpacks = [];
+      mousepacks = [];
+
+      var fuckcheck2 = await loadPacks(app_logo, app_body)
 
 
       // transform packs to options list
