@@ -27,8 +27,8 @@ fs.ensureDirSync(mousecustom_dir);
 function createWindow(show = true) {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 400,
-    height: 680,
+    width: 450,
+    height: 730,
     webSecurity: false,
     // resizable: false,
     // fullscreenable: false,

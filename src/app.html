@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="./assets/app.css" />
   </head>
 
-  <body style="padding: 2rem; background-color:#121212;"></body>
+  <body id="overall-body" style="padding: 2rem; background-color:#121212; user-select: none;"></body>
     <div id="app-logo">
       <div id="logo">Loading...</div>
     </div>
@@ -65,7 +65,10 @@
       </div>
       <div id="soundpack-bug" class="hidden" style="position:relative; top:10px">
         One or more of your soundpacks are broken. They have not been loaded.
-    </div>
+      </div>
+      <div id="mouseSounds" class="hidden" style="position:relative; top:20px">
+        Mouse Sounds are disabled, to enable them please check system tray.
+      </div>
     </div>
   </body>
 </html>

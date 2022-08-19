@@ -31,7 +31,7 @@ let current_sound_key = null;
 let current_mouse_down = null;
 let is_muted = store.get('mechvibes-muted') || false;
 let is_keyup = store.get('mechvibes-keyup') || false;
-let is_mousesounds = store.get('mechvibes-mouse') || false;
+let is_mousesounds = store.get('mechvibes-mouse') || true;
 let is_random = store.get('mechvibes-random') || false;
 let keyboardpacks = [];
 let mousepacks = [];
@@ -312,7 +312,8 @@ function packsToOptions(packs, pack_list, korm) {
     const mouse_volume = document.getElementById('mousevolume');
     const mouseslider = document.getElementById('MouseVolSlider');
     const soundpackbug = document.getElementById('soundpack-bug');
-    const ApplicationBody = document.getElementById('body');
+    const mouseNotification = document.getElementById('mouseSounds');
+    const ApplicationBody = document.getElementById('overall-body');
 
     // set app version
     version.innerHTML = APP_VERSION;
@@ -434,6 +435,7 @@ function packsToOptions(packs, pack_list, korm) {
       mouse_volume.classList.remove('hidden');
       mousepack_list.classList.remove('hidden');
       mouseslider.classList.remove('hidden');
+      mouseNotification.classList.add('hidden');
     }
 
     ipcRenderer.on('MouseSounds', function (_event, _is_mousesounds) {
@@ -444,12 +446,14 @@ function packsToOptions(packs, pack_list, korm) {
         mouse_volume.classList.remove('hidden');
         mousepack_list.classList.remove('hidden');
         mouseslider.classList.remove('hidden');
+        mouseNotification.classList.add('hidden');
       } else {
         playMouseSounds = false
         mouseslider.classList.add('hidden');
         mousepack_list.classList.add('hidden');
         mouse_volume_value.classList.add('hidden');
         mouse_volume.classList.add('hidden');
+        mouseNotification.classList.remove('hidden');
       }
     });
 
