@@ -5,13 +5,13 @@ Please [join our discord](https://discord.gg/WR5Ax6vXNU) if you have any issues 
 ## Software issues
 
 - Blank soundpack list
-        - Mechvibes++ automatically attempts to **not** load any soundpacks that appear broken. This may not work sometimes. Delete any recently installed soundpacks
+                - Mechvibes++ automatically attempts to **not** load any soundpacks that appear broken. This may not work sometimes. Delete any recently installed soundpacks
 - Does not stop loading
-        - Install VC Redist, listed on the [main information doc](README.md)
+                - Install VC Redist, listed on the [main information doc](README.md)
 - No mouse sounds visual
-        - Enable it in your system tray.
+                - Enable it in your system tray.
 - No audio and UI is not updating after fresh install
-        - Quit (system tray) and re-open the app
+                - Quit (system tray) and re-open the app
 
 ## System issues
 
@@ -22,8 +22,8 @@ Please [join our discord](https://discord.gg/WR5Ax6vXNU) if you have any issues 
                 - The program is not a virus. Feel free to scroll through the public online code, and/or scan it with your antivirus software of choice. 
                 - To stop it from being blocked, click on “more info” and then “Run anyway” 
 - High RAM Usage
-              - If regular Mechvibes is open: Quit it from system tray
-              - Otherwise: Solution is being made
+                - If regular Mechvibes is open: Quit it from system tray
+                - Otherwise: Solution is being made
 - Poor game performance (or input lag)
                 - This is not an issue on our end- your (likely low-end) computer cannot perform correctly with both the game and Mechvibes++
 
