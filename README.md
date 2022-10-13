@@ -1,57 +1,160 @@
-![Mechvibes++](https://i.imgur.com/IJsQMg1.png)
-
-Mechvibes++ brings mouse sounds and keyboard down and up sounds to Mechvibes.
-
-[Join our Discord](https://discord.gg/WR5Ax6vXNU)
-
-Made by !Pyro !#4319 and SaturnDev#2937 (discord names)
-
-# How do I use it?
-
-Its simple. Install the program, pick a soundpack, press down a key, and let the key back up, and you hear the sound of the key being pressed up and down from your computer speakers. Same process with a mouse.
-
-And, you can even make your own custom soundpacks.
-
-Its all free!
-
-# Requirements 
-
-- [Microsoft VC Redist 2015-2019 x64](https://aka.ms/vs/16/release/vc_redist.x64.exe) | If Mechvibes is installed and works correctly, you do not need to install this as it already is 
-- 64bit (x64) based PC
-- Running Windows 10 / Windows 11 [MacOS / Linux / ChromeOS has no support. Feel free to fork and make your own, and submit a pull request]
-- 167mb storage available 
-- Recommended to have >6gb RAM because this program **may** take up high amounts of RAM. We are well aware and have plans on fixing.
-
-# Important
-
-We are not the Mechvibes developers. 
-
-Please do not go into the Mechvibes discord for support. Please [Join our Discord](https://discord.gg/WR5Ax6vXNU)
-
-The creator of Mechvibes, hainguyents13, has approval of this program
-
-Please support Mechvibes. You can download it [here](https://mechvibes.com/download/)
-
-# Install
-
-Download the latest release from the [Mechvibes++ Release Page](https://github.com/PyroCalzone/MechVibesModified/releases/latest)
-
-Run the exe installer.
-
-Wait for the download to finish, and enjoy!
-
-# Problems & Issues
-
-Make sure you have installed [Microsoft VC Redist 2015-2019 x64](https://aka.ms/vs/16/release/vc_redist.x64.exe) 
-
-You can ask for help and support on issues in our [Discord Server](https://discord.gg/WR5Ax6vXNU)
-
-
-**If it gets flagged as a virus, you can:**
-- Read through our open sourced code on this very GitHub repository 
-- Scan the exe installer with your antivirus of choice
-- Click "read more" then "Run anyway"
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+<a name="readme-top"></a>
+<!--
+*** Thanks for checking out the Best-README-Template. If you have a suggestion
+*** that would make this better, please fork the repo and create a pull request
+*** or simply open an issue with the tag "enhancement".
+*** Don't forget to give the project a star!
+*** Thanks again! Now go create something AMAZING! :D
+-->
 
 
 
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
+
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/PyroCalzone/MechVibesPlusPlus>
+    <img src="src/assets/icon.png" alt="Logo" width="80" height="80">
+  </a>
+</div>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation-requirements">Installation Requirements</a></li>
+      </ul>
+    </li>
+    <li><a href="#issues">Issues</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#linux-and-macos">Linux and macOS</a></li>
+  </ol>
+</details>
+
+
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+[![Product Name Screen Shot][product-screenshot]](src/assets/app_image.png)
+
+Mechvibes++ brings mouse sounds, key up-and-down sounds, and randomized sounds to Mechvibes.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Built With
+
+* [![Electron][Electron]][Electron-url]
+* [![Node.js][Nodejs]][Nodejs-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
+
+## Getting Started
+
+### Prerequisites
+
+If Mechvibes loads normally without any issues, please skip this.
+
+Download VC Redist 2015-2019
+    [for 64-bit (x64) computers](https://aka.ms/vs/16/release/vc_redist.x64.exe)
+   [for 32-bit (x86) computers](https://aka.ms/vs/16/release/vc_redist.x86.exe)
+
+Run the executeable and let it install. Continue with Mechvibes++ installation when it finishes.
+
+### Installation Requirements
+
+- Approximatley 200mb of storage availible
+   - Version 2.3.1 comes in around 170mb for us, but this may vary for you.
+- Running one of these operating systems:
+    - Windows 10 
+    - Windows 11
+    - Windows 8.1 (support may vary)
+- VC Redist (listed above)
+- 64-bit (x64) based PC/laptop
+- Reccomendation: > 6-8gb of RAM
+
+
+<!-- ROADMAP -->
+## Issues
+
+Read the [issues list](issues.md) here
+
+Please [join our discord](https://discord.gg/WR5Ax6vXNU) if you need additional help (read the list first)
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make Mechvibes++ better, please fork the repo and create a pull request. 
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See [the license file](LICENSE) for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTACT -->
+## Linux and macOS
+
+There is currently **no support** for either operating system since neither of us own a Mac or are willing to make time to install a distro and make a build.
+If you own a Mac or run Linux, you can create a build yourself. Instructions are posted on [our discord](https://discord.gg/WR5Ax6vXNU), pinned in #general
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/PyroCalzone/MechVibesPlusPlus.svg?style=for-the-badge
+[contributors-url]: https://github.com/PyroCalzone/MechVibesPlusPlus/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/PyroCalzone/MechVibesPlusPlus.svg?style=for-the-badge
+[forks-url]: https://github.com/PyroCalzone/MechVibesPlusPlus/network/members
+[stars-shield]: https://img.shields.io/github/stars/PyroCalzone/MechVibesPlusPlus.svg?style=for-the-badge
+[stars-url]: https://github.com/PyroCalzone/MechVibesPlusPlus/stargazers
+[issues-shield]: https://img.shields.io/github/issues/PyroCalzone/MechVibesPlusPlus.svg?style=for-the-badge
+[issues-url]: https://github.com/PyroCalzone/MechVibesPlusPlus/issues
+[license-shield]: https://img.shields.io/github/license/PyroCalzone/MechVibesPlusPlus.svg?style=for-the-badge
+[license-url]: https://github.com/PyroCalzone/MechVibesPlusPlus/blob/main/LICENSE
+[product-screenshot]: src/assets/app_image.png
+[Nodejs]: https://img.shields.io/badge/node.js-000000?style=for-the-badge&logo=nodedotjs
+[Nodejs-url]: https://nodejs.org/
+[Electron]: https://img.shields.io/badge/Electron-000000?style=for-the-badge&logo=electron
+[Electron-url]: https://www.electronjs.org/
