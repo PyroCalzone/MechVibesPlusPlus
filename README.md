@@ -86,9 +86,7 @@ Mechvibes++ brings mouse sounds, key up-and-down sounds, and randomized sounds t
 
 If Mechvibes loads normally without any issues, please skip this.
 
-Download VC Redist 2015-2019
-    [for 64-bit (x64) computers](https://aka.ms/vs/16/release/vc_redist.x64.exe)
-   [for 32-bit (x86) computers](https://aka.ms/vs/16/release/vc_redist.x86.exe)
+Download [VC Redist 2015-2019](https://aka.ms/vs/16/release/vc_redist.x64.exe)
 
 Run the executeable and let it install. Continue with Mechvibes++ installation when it finishes.
 
@@ -96,10 +94,7 @@ Run the executeable and let it install. Continue with Mechvibes++ installation w
 
 - Approximatley 200mb of storage availible
    - Version 2.3.1 comes in around 170mb for us, but this may vary for you.
-- Running one of these operating systems:
-    - Windows 10 
-    - Windows 11
-    - Windows 8.1 (support may vary)
+- Running Windows 8.1 (or later)
 - VC Redist (listed above)
 - 64-bit (x64) based PC/laptop
 - Reccomendation: > 6-8gb of RAM
@@ -131,7 +126,6 @@ Distributed under the MIT License. See [the license file](LICENSE) for more info
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- CONTACT -->
 ## Linux and macOS
 
 There is currently **no support** for either operating system since neither of us own a Mac or are willing to make time to install a distro and make a build.
