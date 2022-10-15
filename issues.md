@@ -1,6 +1,6 @@
 ### Mechvibes++ Known Issues
 
-Please [join our discord](https://discord.gg/WR5Ax6vXNU) if you have any issues that <u>are not</u> listed here.
+Please [join our discord](https://discord.gg/CZ8Qgth2SW) if you have any issues that <u>are not</u> listed here.
 
 ## Software issues
 
@@ -11,7 +11,7 @@ Please [join our discord](https://discord.gg/WR5Ax6vXNU) if you have any issues 
 - No mouse sounds visual
     - Enable it in your system tray.
 - No audio and UI is not updating after fresh install
-       - Quit (system tray) and re-open the app
+    - Quit (system tray) and re-open the app
 
 ## System issues
 
@@ -29,4 +29,4 @@ Please [join our discord](https://discord.gg/WR5Ax6vXNU) if you have any issues 
 
 ## Other issues
 
-Please [join our discord](https://discord.gg/WR5Ax6vXNU) and ask us there
+Please [join our discord](https://discord.gg/CZ8Qgth2SW) and ask us there
