@@ -105,7 +105,7 @@ Run the executeable and let it install. Continue with Mechvibes++ installation w
 
 Read the [issues list](issues.md) here
 
-Please [join our discord](https://discord.gg/WR5Ax6vXNU) if you need additional help (read the list first)
+Please [join our discord](https://discord.gg/CZ8Qgth2SW) if you need additional help (read the list first)
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -129,7 +129,7 @@ Distributed under the MIT License. See [the license file](LICENSE) for more info
 ## Linux and macOS
 
 There is currently **no support** for either operating system since neither of us own a Mac or are willing to make time to install a distro and make a build.
-If you own a Mac or run Linux, you can create a build yourself. Instructions are posted on [our discord](https://discord.gg/WR5Ax6vXNU), pinned in #general
+If you own a Mac or run Linux, you can create a build yourself. Instructions are posted on [our discord](https://discord.gg/CZ8Qgth2SW), pinned in #general
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
