@@ -88,7 +88,7 @@ If Mechvibes loads normally without any issues, please skip this.
 
 Download [VC Redist 2015-2019](https://aka.ms/vs/16/release/vc_redist.x64.exe)
 
-Run the [executeable](https://github.com/PyroCalzone/MechVibesPlusPlus/releases) and let it install. Continue with Mechvibes++ installation when it finishes.
+Run the [executable](https://github.com/PyroCalzone/MechVibesPlusPlus/releases) and let it install. Continue with Mechvibes++ installation when it finishes.
 
 ### Installation Requirements
 
