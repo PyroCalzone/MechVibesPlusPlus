@@ -84,7 +84,7 @@ Mechvibes++ brings mouse sounds, key up-and-down sounds, and randomized sounds t
 
 ### Prerequisites
 
-If Mechvibes loads normally without any issues, please skip this.
+If Mechvibes++ loads normally without any issues, please skip this.
 
 Download [VC Redist 2015-2019](https://aka.ms/vs/16/release/vc_redist.x64.exe)
 
@@ -92,7 +92,7 @@ Run the [executable](https://github.com/PyroCalzone/MechVibesPlusPlus/releases) 
 
 ### Installation Requirements
 
-- Approximatley 200mb of storage availible
+- Approximately 200mb of storage available
    - Version 2.3.1 comes in around 170mb for us, but this may vary for you.
 - Running Windows 8.1 (or later)
 - VC Redist (listed above)
