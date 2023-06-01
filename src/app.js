@@ -26,7 +26,6 @@ const APP_VERSION = remote.getGlobal('app_version');
 
 let current_keyboard_pack = null;
 let current_mouse_pack = null;
-let current_key_down = null;
 let current_sound_key = null;
 let current_mouse_down = null;
 let is_muted = store.get('mechvibes-muted') || false;
@@ -329,6 +328,14 @@ function packsToOptions(packs, pack_list, korm) {
     packsToOptions(keyboardpacks, keyboardpack_list, 'keyboard');
     packsToOptions(mousepacks, mousepack_list, 'mouse');
 
+    if (current_keyboard_pack == null){
+      keyboardpack_list.selectedIndex = -1;
+    }
+
+    if (current_mouse_pack == null){
+      mousepack_list.selectedIndex = -1;
+    }
+
     // check for new version
     fetch('https://api.github.com/repos/PyroCalzone/MechVibesPlusPlus/releases/latest')
       .then((res) => res.json())
@@ -348,13 +355,18 @@ function packsToOptions(packs, pack_list, korm) {
     });
 
     // get last selected pack
-    current_keyboard_pack = getPack('keyboard');
-    current_mouse_pack = getPack('mouse');
+    try {
+      current_keyboard_pack = getPack('keyboard');
+      current_mouse_pack = getPack('mouse');
+    } catch {
+      soundpackbug.classList.remove('hidden');
+    };
 
     // display volume value
     if (store.get(MV_KEY_VOL_LSID)) {
       volume.value = store.get(MV_KEY_VOL_LSID);
-    }
+    };
+
     volume_value.innerHTML = volume.value;
     volume.oninput = function (e) {
       volume_value.innerHTML = this.value;
