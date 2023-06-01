@@ -17,6 +17,7 @@ const MV_KEYBOARD_PACK_LSID = 'mechvibes-pack';
 const MV_MOUSE_PACK_LSID = 'mechvibes-mousepack';
 const MV_KEY_VOL_LSID = 'mechvibes-volume-keyboard';
 const MV_MOUSE_VOL_LSID = 'mechvibes-volume-mouse';
+const MV_CPS_LSID = 'mechvibes-cps';
 
 const KEYBOARD_CUSTOM_PACKS_DIR = remote.getGlobal('keyboardcustom_dir');
 const KEYBOARD_OFFICIAL_PACKS_DIR = path.join(__dirname, 'sounds/keys');
@@ -313,6 +314,9 @@ function packsToOptions(packs, pack_list, korm) {
     const soundpackbug = document.getElementById('soundpack-bug');
     const mouseNotification = document.getElementById('mouseSounds');
     const ApplicationBody = document.getElementById('overall-body');
+    const cps_slider = document.getElementById('CPSSlider');
+    const cps_value = document.getElementById('CPS-value-display');
+    const cps = document.getElementById('CPS');
 
     // set app version
     version.innerHTML = APP_VERSION;
@@ -380,6 +384,16 @@ function packsToOptions(packs, pack_list, korm) {
     mouse_volume.oninput = function (e) {
       mouse_volume_value.innerHTML = this.value;
       store.set(MV_MOUSE_VOL_LSID, this.value);
+    };
+
+    //display cps value
+    if (store.get(MV_CPS_LSID)) {
+      cps.value = store.get(MV_CPS_LSID);
+    }
+    cps_value.innerHTML = cps.value;
+    cps.oninput = function (e) {
+      cps_value.innerHTML = this.value == 0 ? "Unlimited" : this.value;
+      store.set(MV_CPS_LSID, this.value);
     };
 
     function removeOptions(selectElement) {
@@ -485,7 +499,15 @@ function packsToOptions(packs, pack_list, korm) {
       }
     });
 
+    var lastKeypress = null;
     iohook.on('mousedown', ({ button }) => {
+      // get the time of current keypress, compare with last keypress, send keypress if time difference is greater than 1000 / cps_value
+      if (lastKeypress && store.get(MV_CPS_LSID) != 0) {
+        const timeDiff = Date.now() - lastKeypress;
+        if (timeDiff < 1000 / store.get(MV_CPS_LSID)) {
+          return;
+        }
+      }
       if(playMouseSounds){
         if (current_mouse_down != null && current_mouse_down == button) {
           return;
@@ -499,6 +521,7 @@ function packsToOptions(packs, pack_list, korm) {
           playMouseSound(`${sound_id}`, store.get(MV_MOUSE_VOL_LSID), 'down')
         }
       }
+      lastKeypress = Date.now();
     })
 
     iohook.on('mouseup', () => {
