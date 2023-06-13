@@ -17,7 +17,7 @@ Please [join our discord](https://discord.gg/CZ8Qgth2SW) if you have any issues 
 
 - No audio
     - Check system sound settings & drivers, and make sure there is no conflicting software
-    - run MechVibes++ as administrator
+    - Run MechVibes++ as administrator
 - Windows flagged it as a virus
     - Windows Defender will probably block the Mechvibes++ installer. In simple terms, this is because we have not made Microsoft verify that the software as safe (hence "unknown publisher")
     - The program is not a virus. Feel free to scroll through the public online code, and/or scan it with your antivirus software of choice. 
