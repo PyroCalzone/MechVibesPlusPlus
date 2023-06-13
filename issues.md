@@ -17,14 +17,14 @@ Please [join our discord](https://discord.gg/CZ8Qgth2SW) if you have any issues 
 
 - No audio
     - Check system sound settings & drivers, and make sure there is no conflicting software
-    - run mechvibes++ as administrator
+    - run MechVibes++ as administrator
 - Windows flagged it as a virus
     - Windows Defender will probably block the Mechvibes++ installer. In simple terms, this is because we have not made Microsoft verify that the software as safe (hence "unknown publisher")
     - The program is not a virus. Feel free to scroll through the public online code, and/or scan it with your antivirus software of choice. 
     - To stop it from being blocked, click on “more info” and then “Run anyway” 
 - High RAM Usage
     - If regular Mechvibes is open: Quit it from system tray
-    - Delete big and unused soundpacks
+    - Delete large and unused soundpacks
     - Otherwise: Solution is being made
 - Poor game performance (or input lag)
     - This is not an issue on our end- your (likely low-end) computer cannot perform correctly with both the game and Mechvibes++
