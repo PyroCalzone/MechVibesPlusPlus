@@ -25,6 +25,41 @@ const KEYBOARD_OFFICIAL_PACKS_DIR = path.join(__dirname, "sounds/keys");
 const MOUSE_OFFICIAL_PACKS_DIR = path.join(__dirname, "sounds/mouse");
 // const APP_VERSION = remote.getGlobal("app_version");
 
+const ipc = {
+  render: {
+    send: [],
+    receive: [
+      "main:appVersion",
+      "main:mouseCustomDirectory",
+      "main:keyboardCustomDirectory",
+    ],
+    sendReceive: [],
+  },
+};
+
+contextBridge.exposeInMainWorld("ipcRender", {
+  send: (channel, args) => {
+    let validChannels = ipc.render.send;
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, args);
+    }
+  },
+
+  receive: (channel, listener) => {
+    let validChannels = ipc.render.receive;
+    if (validChannels.includes(channel)) {
+      ipcRenderer.on(channel, (event, ...args) => listener(...args));
+    }
+  },
+
+  invoke: (channel, args) => {
+    let validChannels = ipc.render.sendReceive;
+    if (validChannels.includes(channel)) {
+      return ipcRenderer.invoke(channel, args);
+    }
+  },
+});
+
 let current_keyboard_pack = null;
 let current_mouse_pack = null;
 let current_sound_key = null;
@@ -37,176 +72,200 @@ let keyboardpacks = [];
 let mousepacks = [];
 const all_sound_files = {};
 
+let APP_VERSION = async (ver) => {
+  return ver;
+};
+
+electron.ipcRenderer.receive("main:appVersion", (message) => {
+  return APP_VERSION(message);
+});
+
+let custom_packs_obj;
+let mouse_custom_packs_obj;
+
+const custom_packs = async (dir) => {
+  custom_packs_obj = await glob.sync(dir + "/*/");
+  return custom_packs_obj;
+};
+
+const mouse_custom_packs = async (dir) => {
+  mouse_custom_packs_obj = await glob.sync(dir + "/*/");
+  return mouse_custom_packs_obj;
+};
+
+electron.ipcRenderer.receive("main:mouseCustomDirectory", (message) => {
+  return mouse_custom_packs(message);
+});
+
+electron.ipcRenderer.receive("main:keyboardCustomDirectory", (message) => {
+  return custom_packs(message);
+});
+
 // ==================================================
 // load all pack
-const directoryEvent = new Event("directoriesReceived");
-
-async function loadPacks(status_display_elem, app_body, custom_packs_obj) {
+async function loadPacks(status_display_elem, app_body) {
   // init
   status_display_elem.innerHTML = "Loading...";
-  var fucked = false;
+
   // get all audio folders
-  if (custom_packs_obj) {
-    const official_packs = await glob.sync(KEYBOARD_OFFICIAL_PACKS_DIR + "/*/");
-    const custom_packs = custom_packs_obj.keyboard;
-    const mouse_official_packs = await glob.sync(
-      MOUSE_OFFICIAL_PACKS_DIR + "/*/"
-    );
-    const mouse_custom_packs = custom_packs_obj.mouse;
-    console.log(custom_packs, mouse_custom_packs);
-    const folders = [...official_packs, ...custom_packs];
-    const mouse_folders = [...mouse_official_packs, ...mouse_custom_packs];
+  const official_packs = await glob.sync(KEYBOARD_OFFICIAL_PACKS_DIR + "/*/");
+  const custom_packs = custom_packs_obj;
+  const mouse_official_packs = await glob.sync(
+    MOUSE_OFFICIAL_PACKS_DIR + "/*/"
+  );
+  const mouse_custom_packs = mouse_custom_packs_obj;
+  const folders = [...official_packs, ...custom_packs];
+  const mouse_folders = [...mouse_official_packs, ...mouse_custom_packs];
 
-    // get pack data
-    folders.map((folder) => {
-      try {
-        // define group by types
-        const is_custom =
-          folder.indexOf("mechvibes_custom") > -1 ? true : false;
+  var fucked = false;
 
-        // get folder name
-        const splited = folder.split("/");
-        const folder_name = splited[splited.length - 2];
+  // get pack data
+  folders.map((folder) => {
+    try {
+      // define group by types
+      const is_custom = folder.indexOf("mechvibes_custom") > -1 ? true : false;
 
-        // define config file path
-        const config_file = `${folder.replace(/\/$/, "")}/config.json`;
+      // get folder name
+      const splited = folder.split("/");
+      const folder_name = splited[splited.length - 2];
 
-        // get pack info and defines data
-        const {
-          name,
-          includes_numpad,
-          sound = "",
-          defines,
-          key_define_type = "single",
-          compatibility = false,
-        } = require(config_file);
+      // define config file path
+      const config_file = `${folder.replace(/\/$/, "")}/config.json`;
 
-        // pack sound pack data
-        const pack_data = {
-          pack_id: `${is_custom ? "custom" : "default"}-${folder_name}`,
-          group: is_custom ? "Custom" : "Default",
-          abs_path: folder,
-          key_define_type,
-          compatibility,
-          name,
-          includes_numpad,
-        };
+      // get pack info and defines data
+      const {
+        name,
+        includes_numpad,
+        sound = "",
+        defines,
+        key_define_type = "single",
+        compatibility = false,
+      } = require(config_file);
 
-        // init sound data
-        if (key_define_type == "single") {
-          // define sound path
-          const sound_path = `${folder}${sound}`;
-          const sound_data = new Howl({
-            src: [sound_path],
-            sprite: keycodesRemap(defines),
-          });
-          Object.assign(pack_data, { sound: sound_data });
-          all_sound_files[pack_data.pack_id] = false;
-          // event when sound loaded
-          sound_data.once("load", function () {
-            all_sound_files[pack_data.pack_id] = true;
-            checkIfAllSoundLoaded(status_display_elem, app_body);
-          });
-        } else {
-          const sound_data = {};
-          Object.keys(defines).map((kc) => {
-            if (defines[kc]) {
-              // define sound path
-              const sound_path = `${folder}${defines[kc]}`;
-              sound_data[kc] = new Howl({ src: [sound_path] });
-              all_sound_files[`${pack_data.pack_id}-${kc}`] = false;
-              // event when sound_data loaded
-              sound_data[kc].once("load", function () {
-                all_sound_files[`${pack_data.pack_id}-${kc}`] = true;
-                checkIfAllSoundLoaded(status_display_elem, app_body);
-              });
-            }
-          });
-          if (Object.keys(sound_data).length) {
-            Object.assign(pack_data, { sound: keycodesRemap(sound_data) });
+      // pack sound pack data
+      const pack_data = {
+        pack_id: `${is_custom ? "custom" : "default"}-${folder_name}`,
+        group: is_custom ? "Custom" : "Default",
+        abs_path: folder,
+        key_define_type,
+        compatibility,
+        name,
+        includes_numpad,
+      };
+
+      // init sound data
+      if (key_define_type == "single") {
+        // define sound path
+        const sound_path = `${folder}${sound}`;
+        const sound_data = new Howl({
+          src: [sound_path],
+          sprite: keycodesRemap(defines),
+        });
+        Object.assign(pack_data, { sound: sound_data });
+        all_sound_files[pack_data.pack_id] = false;
+        // event when sound loaded
+        sound_data.once("load", function () {
+          all_sound_files[pack_data.pack_id] = true;
+          checkIfAllSoundLoaded(status_display_elem, app_body);
+        });
+      } else {
+        const sound_data = {};
+        Object.keys(defines).map((kc) => {
+          if (defines[kc]) {
+            // define sound path
+            const sound_path = `${folder}${defines[kc]}`;
+            sound_data[kc] = new Howl({ src: [sound_path] });
+            all_sound_files[`${pack_data.pack_id}-${kc}`] = false;
+            // event when sound_data loaded
+            sound_data[kc].once("load", function () {
+              all_sound_files[`${pack_data.pack_id}-${kc}`] = true;
+              checkIfAllSoundLoaded(status_display_elem, app_body);
+            });
           }
+        });
+        if (Object.keys(sound_data).length) {
+          Object.assign(pack_data, { sound: keycodesRemap(sound_data) });
         }
-
-        // push pack data to pack list
-        keyboardpacks.push(pack_data);
-      } catch (err) {
-        fucked = true;
       }
-    });
 
-    mouse_folders.map((folder) => {
-      try {
-        // define group by types
-        const is_custom =
-          folder.indexOf("mousevibes_custom") > -1 ? true : false;
+      // push pack data to pack list
+      keyboardpacks.push(pack_data);
+    } catch (err) {
+      fucked = true;
+    }
+  });
 
-        // get folder name
-        const splited = folder.split("/");
-        const folder_name = splited[splited.length - 2];
+  mouse_folders.map((folder) => {
+    try {
+      // define group by types
+      const is_custom = folder.indexOf("mousevibes_custom") > -1 ? true : false;
 
-        // define config file path
-        const config_file = `${folder.replace(/\/$/, "")}/config.json`;
+      // get folder name
+      const splited = folder.split("/");
+      const folder_name = splited[splited.length - 2];
 
-        // get pack info and defines data
-        const {
-          name,
-          sound = "",
-          defines,
-          key_define_type = "single",
-        } = require(config_file);
+      // define config file path
+      const config_file = `${folder.replace(/\/$/, "")}/config.json`;
 
-        // pack sound pack data
-        const pack_data = {
-          pack_id: `${is_custom ? "custom" : "default"}-${folder_name}`,
-          group: is_custom ? "Custom" : "Default",
-          abs_path: folder,
-          key_define_type,
-          name,
-        };
+      // get pack info and defines data
+      const {
+        name,
+        sound = "",
+        defines,
+        key_define_type = "single",
+      } = require(config_file);
 
-        // init sound data
-        if (key_define_type == "single") {
-          //This wont work, I still don't give a shit. Maybe??
-          // define sound path
-          const sound_path = `${folder}${sound}`;
-          const sound_data = new Howl({
-            src: [sound_path],
-            sprite: keycodesRemap(defines),
-          });
-          Object.assign(pack_data, { sound: sound_data });
-          all_sound_files[pack_data.pack_id] = false;
-          // event when sound loaded
-          sound_data.once("load", function () {
-            all_sound_files[pack_data.pack_id] = true;
-            checkIfAllSoundLoaded(status_display_elem, app_body);
-          });
-        } else {
-          const sound_data = {};
-          Object.keys(defines).map((kc) => {
-            if (defines[kc]) {
-              // define sound path
-              const sound_path = `${folder}${defines[kc]}`;
-              sound_data[kc] = new Howl({ src: [sound_path] });
-              all_sound_files[`${pack_data.pack_id}-${kc}`] = false;
-              // event when sound_data loaded
-              sound_data[kc].once("load", function () {
-                all_sound_files[`${pack_data.pack_id}-${kc}`] = true;
-                checkIfAllSoundLoaded(status_display_elem, app_body);
-              });
-            }
-          });
-          if (Object.keys(sound_data).length) {
-            Object.assign(pack_data, { sound: keycodesRemap(sound_data) });
+      // pack sound pack data
+      const pack_data = {
+        pack_id: `${is_custom ? "custom" : "default"}-${folder_name}`,
+        group: is_custom ? "Custom" : "Default",
+        abs_path: folder,
+        key_define_type,
+        name,
+      };
+
+      // init sound data
+      if (key_define_type == "single") {
+        //This wont work, I still don't give a shit. Maybe??
+        // define sound path
+        const sound_path = `${folder}${sound}`;
+        const sound_data = new Howl({
+          src: [sound_path],
+          sprite: keycodesRemap(defines),
+        });
+        Object.assign(pack_data, { sound: sound_data });
+        all_sound_files[pack_data.pack_id] = false;
+        // event when sound loaded
+        sound_data.once("load", function () {
+          all_sound_files[pack_data.pack_id] = true;
+          checkIfAllSoundLoaded(status_display_elem, app_body);
+        });
+      } else {
+        const sound_data = {};
+        Object.keys(defines).map((kc) => {
+          if (defines[kc]) {
+            // define sound path
+            const sound_path = `${folder}${defines[kc]}`;
+            sound_data[kc] = new Howl({ src: [sound_path] });
+            all_sound_files[`${pack_data.pack_id}-${kc}`] = false;
+            // event when sound_data loaded
+            sound_data[kc].once("load", function () {
+              all_sound_files[`${pack_data.pack_id}-${kc}`] = true;
+              checkIfAllSoundLoaded(status_display_elem, app_body);
+            });
           }
+        });
+        if (Object.keys(sound_data).length) {
+          Object.assign(pack_data, { sound: keycodesRemap(sound_data) });
         }
-
-        // push pack data to pack list
-        mousepacks.push(pack_data);
-      } catch (err) {
-        fucked = true;
       }
-    });
-  }
+
+      // push pack data to pack list
+      mousepacks.push(pack_data);
+    } catch (err) {
+      fucked = true;
+    }
+  });
 
   // end load
   return fucked;
@@ -337,25 +396,10 @@ function packsToOptions(packs, pack_list, korm) {
 // ==================================================
 // main
 (function (window, document) {
-  window.addEventListener("directoriesReceived", () => {
-    const app_logo = document.getElementById("logo");
-    const app_body = document.getElementById("app-body");
-    // Use window.mouseCustomDirectory and window.keyboardCustomDirectory here
-    // Check if both directories are not undefined before using them
-    if (window.mouseCustomDirectory && window.keyboardCustomDirectory) {
-      // Both directories are available
-      // You can use them here to define custom_packs_obj
-      const custom_packs_obj = {
-        mouse: window.mouseCustomDirectory,
-        keyboard: window.keyboardCustomDirectory,
-      };
-      loadPacks(app_body, app_body, custom_packs_obj);
-    }
-  });
   window.addEventListener("DOMContentLoaded", async () => {
-    // const version = document.getElementById("app-version");
-    // const update_available = document.getElementById("update-available");
-    // const new_version = document.getElementById("new-version");
+    const version = document.getElementById("app-version");
+    const update_available = document.getElementById("update-available");
+    const new_version = document.getElementById("new-version");
     const app_logo = document.getElementById("logo");
     const app_body = document.getElementById("app-body");
     const keyboardpack_list = document.getElementById("keyboardpack-list");
@@ -374,14 +418,14 @@ function packsToOptions(packs, pack_list, korm) {
     const ApplicationBody = document.getElementById("overall-body");
 
     // set app version
-    // version.innerHTML = APP_VERSION;
+    version.innerHTML = APP_VERSION;
 
     // load all packs
-    // var fuckcheck = await loadPacks(app_logo, app_body);
+    var fuckcheck = await loadPacks(app_logo, app_body);
 
-    // if (fuckcheck) {
-    //   soundpackbug.classList.remove("hidden");
-    // }
+    if (fuckcheck) {
+      soundpackbug.classList.remove("hidden");
+    }
 
     // transform packs to options list
     packsToOptions(keyboardpacks, keyboardpack_list, "keyboard");
@@ -396,26 +440,26 @@ function packsToOptions(packs, pack_list, korm) {
     }
 
     // check for new version
-    // fetch(
-    //   "https://api.github.com/repos/PyroCalzone/MechVibesPlusPlus/releases/latest"
-    // )
-    //   .then((res) => res.json())
-    //   .then((json) => {
-    //     if (json.tag_name > APP_VERSION) {
-    //       new_version.innerHTML = json.tag_name;
-    //       update_available.classList.remove("hidden");
-    //     }
-    //   });
+    fetch(
+      "https://api.github.com/repos/PyroCalzone/MechVibesPlusPlus/releases/latest"
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.tag_name > APP_VERSION) {
+          new_version.innerHTML = json.tag_name;
+          update_available.classList.remove("hidden");
+        }
+      });
 
-    // // a little hack for open link in browser
-    // Array.from(document.getElementsByClassName("open-in-browser")).forEach(
-    //   (elem) => {
-    //     elem.addEventListener("click", (e) => {
-    //       e.preventDefault();
-    //       shell.openExternal(e.target.href);
-    //     });
-    //   }
-    // );
+    // a little hack for open link in browser
+    Array.from(document.getElementsByClassName("open-in-browser")).forEach(
+      (elem) => {
+        elem.addEventListener("click", (e) => {
+          e.preventDefault();
+          shell.openExternal(e.target.href);
+        });
+      }
+    );
 
     // get last selected pack
     try {
@@ -463,7 +507,7 @@ function packsToOptions(packs, pack_list, korm) {
       keyboardpacks = [];
       mousepacks = [];
 
-      //   var fuckcheck2 = await loadPacks(app_logo, app_body);
+      var fuckcheck2 = await loadPacks(app_logo, app_body);
 
       // transform packs to options list
       packsToOptions(keyboardpacks, keyboardpack_list, "keyboard");
@@ -537,38 +581,6 @@ function packsToOptions(packs, pack_list, korm) {
     if (is_random) {
       randomSounds = true;
     }
-
-    // ipcRenderer.on("main:appVersion", async (message) => {
-    //   console.log(message);
-    //   return await APP_VERSION(message);
-    // });
-
-    let custom_packs_obj;
-    let mouse_custom_packs_obj;
-
-    const custom_packs_fn = async (dir) => {
-      custom_packs_obj = await glob.sync(dir + "/*/");
-      return custom_packs_obj;
-    };
-
-    const mouse_custom_packs_fn = async (dir) => {
-      mouse_custom_packs_obj = await glob.sync(dir + "/*/");
-      return mouse_custom_packs_obj;
-    };
-
-    ipcRenderer.on("main:mouseCustomDirectory", async (message) => {
-      console.log("main thread mouse" + JSON.stringify(message));
-      window.mouseCustomDirectory = message;
-      window.dispatchEvent(directoryEvent);
-      return await mouse_custom_packs_fn(message);
-    });
-
-    ipcRenderer.on("main:keyboardCustomDirectory", async (message) => {
-      console.log("main thread kb" + JSON.stringify(message));
-      window.keyboardCustomDirectory = message;
-      window.dispatchEvent(directoryEvent);
-      return await custom_packs_fn(message);
-    });
 
     ipcRenderer.on("RandomSoundEnable", function (_event, _is_random) {
       is_random = _is_random;
