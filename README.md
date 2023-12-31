@@ -84,7 +84,7 @@ Mechvibes++ brings mouse sounds, key up-and-down sounds, and randomized sounds t
 
 ### Prerequisites
 
-If Mechvibes++ loads normally without any issues, please skip this.
+If regular Mechvibes loads normally without any issues, please skip this.
 
 Download [VC Redist 2015-2019](https://aka.ms/vs/16/release/vc_redist.x64.exe)
 
@@ -128,8 +128,9 @@ Distributed under the MIT License. See [the license file](LICENSE) for more info
 
 ## Linux and macOS
 
-There is currently **no support** for either operating system since neither of us own a Mac or are willing to make time to install a distro and make a build.
-If you own a Mac or run Linux, you can create a build yourself. Instructions are posted on [our discord](https://discord.gg/CZ8Qgth2SW), pinned in #general
+There is currently **no support** for either operating system since neither of us own a Mac or are able to make time to install Linux and make a version for it.
+
+If you own a Mac or run Linux, you can create a build yourself. Instructions are posted [here](doc/linux-and-mac.md).
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
