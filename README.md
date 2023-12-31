@@ -94,10 +94,10 @@ Run the [executable](https://github.com/PyroCalzone/MechVibesPlusPlus/releases) 
 
 - Approximately 200mb of storage available
    - Version 2.3.1 comes in around 170mb for us, but this may vary for you.
-- Running Windows 8.1 (or later)
+- Running Windows 8.1 or later
 - VC Redist (listed above)
 - 64-bit (x64) based PC/laptop
-- Reccomendation: > 6-8gb of RAM
+- 6-8GB of RAM recommended
 
 
 <!-- ROADMAP -->
