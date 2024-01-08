@@ -1,25 +1,26 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, Tray, Menu, shell, ipcMain } = require('electron');
-const path = require('path');
-const fs = require('fs-extra');
-const StartupHandler = require('./utils/startup_handler');
-const ListenHandler = require('./utils/listen_handler');
-const KeyupHandler = require('./utils/keyup_handler');
-const MouseHandler = require('./utils/mouse_handler');
-const RandomHandler = require('./utils/random_handler');
+const { app, BrowserWindow, Tray, Menu, shell, ipcMain } = require("electron");
+const path = require("path");
+const fs = require("fs-extra");
+const { resolve, join } = require("path");
+const StartupHandler = require("./utils/startup_handler");
+const ListenHandler = require("./utils/listen_handler");
+const KeyupHandler = require("./utils/keyup_handler");
+const MouseHandler = require("./utils/mouse_handler");
+const RandomHandler = require("./utils/random_handler");
 
-const SYSTRAY_ICON = path.join(__dirname, '/assets/system-tray-icon.png');
-const home_dir = app.getPath('home');
-const keyboardcustom_dir = path.join(home_dir, '/mechvibes_custom');
-const mousecustom_dir = path.join(home_dir, '/mousevibes_custom');
+const SYSTRAY_ICON = path.join(__dirname, "/assets/system-tray-icon.png");
+const home_dir = app.getPath("home");
+const keyboardcustom_dir = path.join(home_dir, "/mechvibes_custom");
+const mousecustom_dir = path.join(home_dir, "/mousevibes_custom");
+
+const Store = require("electron-store");
+Store.initRenderer();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 var win;
 var tray = null;
-global.app_version = app.getVersion();
-global.keyboardcustom_dir = keyboardcustom_dir;
-global.mousecustom_dir = mousecustom_dir;
 // create custom sound folder if not exists
 fs.ensureDirSync(keyboardcustom_dir);
 fs.ensureDirSync(mousecustom_dir);
@@ -27,15 +28,17 @@ fs.ensureDirSync(mousecustom_dir);
 function createWindow(show = true) {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 450,
+    // 450
+    width: 1200,
     height: 730,
     webSecurity: false,
     // resizable: false,
     // fullscreenable: false,
     webPreferences: {
-      preload: path.join(__dirname, 'app.js'),
-      contextIsolation: false,
+      preload: resolve(__dirname, "app.js"),
+      // contextIsolation: true,
       nodeIntegration: true,
+      sandbox: false,
     },
     show,
   });
@@ -44,31 +47,40 @@ function createWindow(show = true) {
   win.removeMenu();
 
   // and load the index.html of the app.
-  win.loadFile('./src/app.html');
+  win.loadFile("./src/app.html").then(() => {
+    // global.app_version = app.getVersion();
+    // global.keyboardcustom_dir = keyboardcustom_dir;
+    // global.mousecustom_dir = mousecustom_dir;
+    console.log(mousecustom_dir);
+    console.log(keyboardcustom_dir);
+    win.webContents.send("main:appVersion", app.getVersion());
+    win.webContents.send("main:mouseCustomDirectory", mousecustom_dir);
+    win.webContents.send("main:keyboardCustomDirectory", keyboardcustom_dir);
+  });
 
   // Open the DevTools.
-  //win.openDevTools();
-  //win.webContents.openDevTools();
+  win.openDevTools();
+  win.webContents.openDevTools();
 
   // Emitted when the window is closed.
-  win.on('closed', function () {
+  win.on("closed", function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null;
   });
 
-  win.on('minimize', function (event) {
-    if (process.platform === 'darwin') {
+  win.on("minimize", function (event) {
+    if (process.platform === "darwin") {
       app.dock.hide();
     }
     event.preventDefault();
     win.hide();
   });
 
-  win.on('close', function (event) {
+  win.on("close", function (event) {
     if (!app.isQuiting) {
-      if (process.platform === 'darwin') {
+      if (process.platform === "darwin") {
         app.dock.hide();
       }
       event.preventDefault();
@@ -81,7 +93,7 @@ function createWindow(show = true) {
 }
 
 const gotTheLock = app.requestSingleInstanceLock();
-app.on('second-instance', () => {
+app.on("second-instance", () => {
   // Someone tried to run a second instance, we should focus our window.
   if (win) {
     win.show();
@@ -92,7 +104,7 @@ app.on('second-instance', () => {
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on('second-instance', () => {
+  app.on("second-instance", () => {
     // Someone tried to run a second instance, we should focus our window.
     if (win) {
       if (win.isMinimized()) {
@@ -108,14 +120,14 @@ if (!gotTheLock) {
   // Some APIs can only be used after this event occurs.
   // Don't show the window and create a tray instead
   // create and get window instance
-  app.on('ready', () => {
+  app.on("ready", () => {
     win = createWindow(true);
 
     // start tray icon
     tray = new Tray(SYSTRAY_ICON);
 
     // tray icon tooltip
-    tray.setToolTip('MechvibesPlusPlus');
+    tray.setToolTip("MechvibesPlusPlus");
 
     const startup_handler = new StartupHandler(app);
     const listen_handler = new ListenHandler(app);
@@ -126,89 +138,89 @@ if (!gotTheLock) {
     // context menu when hover on tray icon
     const contextMenu = Menu.buildFromTemplate([
       {
-        label: 'MechvibesPlusPlus',
+        label: "MechvibesPlusPlus",
         click: function () {
           // show app on click
           win.show();
         },
       },
       {
-        label: 'Editor',
+        label: "Editor",
         click: function () {
           openEditorWindow();
         },
       },
       {
-        label: 'Keyboard Sound Custom Folder',
+        label: "Keyboard Sound Custom Folder",
         click: function () {
           shell.openItem(keyboardcustom_dir);
         },
       },
       {
-        label: 'Mouse Sound Custom Folder',
+        label: "Mouse Sound Custom Folder",
         click: function () {
           shell.openItem(mousecustom_dir);
         },
       },
       {
-        label: 'Open Devtools',
+        label: "Open Devtools",
         click: function () {
           win.openDevTools();
           win.webContents.openDevTools();
         },
       },
       {
-        label: 'Refresh Soundpacks',
+        label: "Refresh Soundpacks",
         click: function () {
-          win.webContents.send('refresh')
+          win.webContents.send("refresh");
         },
       },
       {
-        label: 'Mute',
-        type: 'checkbox',
+        label: "Mute",
+        type: "checkbox",
         checked: listen_handler.is_muted,
         click: function () {
           listen_handler.toggle();
-          win.webContents.send('muted', listen_handler.is_muted);
+          win.webContents.send("muted", listen_handler.is_muted);
         },
       },
       {
-      label: 'Keyup Sounds',
-      type: 'checkbox',
-      checked: keyup_handler.is_keyup,
-      click: function () {
-        keyup_handler.toggle();
-        win.webContents.send('theKeyup', keyup_handler.is_keyup);
+        label: "Keyup Sounds",
+        type: "checkbox",
+        checked: keyup_handler.is_keyup,
+        click: function () {
+          keyup_handler.toggle();
+          win.webContents.send("theKeyup", keyup_handler.is_keyup);
         },
       },
       {
-        label: 'Mouse Sounds',
-        type: 'checkbox',
+        label: "Mouse Sounds",
+        type: "checkbox",
         checked: mouse_handler.is_mousesounds,
         click: function () {
           mouse_handler.toggle();
-          win.webContents.send('MouseSounds', mouse_handler.is_mousesounds);
+          win.webContents.send("MouseSounds", mouse_handler.is_mousesounds);
         },
       },
       {
-        label: 'Random Sounds',
-        type: 'checkbox',
+        label: "Random Sounds",
+        type: "checkbox",
         checked: random_handler.is_random,
         click: function () {
           random_handler.toggle();
-          win.webContents.send('RandomSoundEnable', random_handler.is_random);
+          win.webContents.send("RandomSoundEnable", random_handler.is_random);
         },
       },
       {
-        label: 'Enable at Startup',
-        type: 'checkbox',
+        label: "Enable at Startup",
+        type: "checkbox",
         checked: startup_handler.is_enabled,
         click: function () {
           startup_handler.toggle();
         },
       },
       {
-        label: 'Quit',
+        label: "Quit",
         click: function () {
           // quit
           app.isQuiting = true;
@@ -218,39 +230,39 @@ if (!gotTheLock) {
     ]);
 
     // double click on tray icon, show the app
-    tray.on('double-click', () => {
+    tray.on("double-click", () => {
       win.show();
     });
 
     tray.setContextMenu(contextMenu);
 
     // prevent Electron app from interrupting macOS system shutdown
-    if (process.platform == 'darwin') {
-      const { powerMonitor } = require('electron');
-      powerMonitor.on('shutdown', () => {
+    if (process.platform == "darwin") {
+      const { powerMonitor } = require("electron");
+      powerMonitor.on("shutdown", () => {
         app.quit();
       });
     }
   });
 }
 
-app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on("window-all-closed", function () {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') app.quit();
+  if (process.platform !== "darwin") app.quit();
 });
 
-app.on('activate', function () {
+app.on("activate", function () {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (win === null) createWindow();
 });
 
 // always be sure that your application handles the 'quit' event in your main process
-app.on('quit', () => {
+app.on("quit", () => {
   app.quit();
 });
 
@@ -278,9 +290,9 @@ function openEditorWindow() {
 
   // editor_window.openDevTools();
 
-  editor_window.loadFile('./src/editor.html');
+  editor_window.loadFile("./src/editor.html");
 
-  editor_window.on('closed', function () {
+  editor_window.on("closed", function () {
     editor_window = null;
   });
 }
